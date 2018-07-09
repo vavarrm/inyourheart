@@ -7,22 +7,22 @@ class MySocketIO
 		$this->CI =& get_instance();
 		try 
 		{
-			if(!empty($_SERVER['HTTP_CLIENT_IP'])){
-			   $myip = $_SERVER['HTTP_CLIENT_IP'];
-			}else if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
-			   $myip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-			}else{
-			   $myip= $_SERVER['REMOTE_ADDR'];
-			}
-			if($myip!="13.229.126.143" && $myip !="127.0.0.1")
-			{
-				$array = array(
-					'status'	=>'017'
-				);
-				$MyException = new MyException();
-				$MyException->setParams($array);
-				throw $MyException;
-			}
+			// if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+			   // $myip = $_SERVER['HTTP_CLIENT_IP'];
+			// }else if(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+			   // $myip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			// }else{
+			   // $myip= $_SERVER['REMOTE_ADDR'];
+			// }
+			// if($myip!="13.229.126.143" && $myip !="127.0.0.1")
+			// {
+				// $array = array(
+					// 'status'	=>'017'
+				// );
+				// $MyException = new MyException();
+				// $MyException->setParams($array);
+				// throw $MyException;
+			// }
 		}catch(MyException $e)
 		{
 			$parames = $e->getParams();

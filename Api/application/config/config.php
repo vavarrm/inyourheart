@@ -370,8 +370,8 @@ $config['encryption_key'] = '';
 */
 $config['sess_driver'] = 'database';
 $config['sess_table_name'] = 'ci_sessions';
-$config['sess_cookie_name'] = 'qr_sihalive';
-$config['sess_expiration'] = 60*60*24*7;
+$config['sess_cookie_name'] = 'inyourheart';
+$config['sess_expiration'] = 60*60*2;
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;

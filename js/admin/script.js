@@ -828,7 +828,7 @@ var loginCtrl = function($scope, $cookies, apiService)
 				if(r.data.status =="200")
 				{
 					$scope.sess = r.data.body.sess;
-					$cookies.put('admin_sess', $scope.sess, { path: '/' ,expires:new Date(new Date().getTime()+6000*60*24*14)});
+					$cookies.put('admin_sess', $scope.sess, { path: '/' ,expires:new Date(new Date().getTime()+6000*60*2)});
 					var obj =
 					{
 						'message':'welcome',

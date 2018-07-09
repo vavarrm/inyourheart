@@ -4,4 +4,7 @@
 	$lang['002'] = "required is empty";
 	$lang['003'] = "del failure";
 	$lang['004'] = "edit failure";
+	$lang['005'] = "account does not exist";
+	$lang['006'] = "account is lock";
+	$lang['007'] = "password error";
 ?>

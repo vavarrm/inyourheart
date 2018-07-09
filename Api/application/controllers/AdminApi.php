@@ -60,7 +60,7 @@ class AdminApi extends CI_Controller {
 			if(empty($admin_user))
 			{
 				$array = array(
-					'status'	=>'003'
+					'status'	=>'005'
 				);
 				$MyException = new MyException();
 				$MyException->setParams($array);
@@ -70,7 +70,7 @@ class AdminApi extends CI_Controller {
 			if($admin_user['ad_status'] =='onlock')
 			{
 				$array = array(
-					'status'	=>'004'
+					'status'	=>'006'
 				);
 				$MyException = new MyException();
 				$MyException->setParams($array);
@@ -80,7 +80,7 @@ class AdminApi extends CI_Controller {
 			if(md5($ary['password']) != $admin_user['ad_passwd'])
 			{
 				$array = array(
-					'status'	=>'005'
+					'status'	=>'007'
 				);
 				$MyException = new MyException();
 				$MyException->setParams($array);

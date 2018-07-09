@@ -1,0 +1,49 @@
+<div class="row" ng-init="editFormInit('getDetails')">
+   <div class="container">
+        <div class="x_panel" >
+            <div class="x_title">
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link" ng-click="back();"><i class="fa fa-arrow-left"></i></a></li>
+                    <li><a class="close-link" ng-click="tableClose();"><i class="fa fa-close"></i></a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content" style="text-align: right!important;">
+				<table class="table table-hover table-bordered">
+					<thead >
+					  <tr class="success">
+						<th class="text-center" width="55%">Item</th>
+						<th class="text-center" width="15%">Quantity</th>
+						<th class="text-center" width="15%">Price</th>
+						<th class="text-center" width="15%">SubTotal</th>
+					  </tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="row in data.form_row.details| filter as filterAry" repeat-finish="renderFinish()" >
+							<td class="text-left" ng-bind="row.full_name"></td>
+							<td class="text-left" ng-bind="row.quantity +' ' +row.unit"></td>
+							<td class="text-left" ng-bind="row.currency +' ' +row.price"></td>
+							<td class="text-left" ng-bind="row.currency +' ' +row.subtotal"></td>
+						</tr>{{sumTotal(data.row.subtotal,data.row.currency)}}
+						<tr class="warning"  >
+							<td  class="text-danger" style=" vertical-align: middle;">
+								<h4 ng-bind="' DATE ' + ' : '+data.form_row.info.add_date"></h4>
+							</td>
+							<td  class="text-danger" style=" vertical-align: middle;">
+								<h4>Total</h4>
+							</td>
+							<td colspan="2" class="text-danger text-left" style=" vertical-align: middle;">
+								<h4>
+									usd&nbsp;total：{{data.form_row.info.usd_total}}
+								</h4>
+								<h4>
+									khr&nbsp;&nbsp;total：{{data.form_row.info.khr_total}}
+								</h4>
+							</td>
+						</tr>
+					</tbody>
+			  </table>
+            </div>
+        </div>
+    </div>
+</div>

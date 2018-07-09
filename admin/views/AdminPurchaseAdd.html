@@ -1,0 +1,80 @@
+<div class="row"  ng-init="tableInit();editFormInit('addFormPage');">
+    <div class="container">
+        <div class="x_panel" >
+            <div class="x_title">
+                <h2>Create Purchase
+					<a class="fa fa-plus" ng-click="addTr();"></a>
+				</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link" ng-click="back();"><i class="fa fa-arrow-left"></i></a></li>
+                    <li><a class="close-link" ng-click="tableClose();"><i class="fa fa-close"></i></a></li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content" style="text-align: right!important;">
+
+                <form   action="{{data.form.action}}" method="post" class="form-horizontal " enctype="multipart/form-data">
+					<table class="table table-hover table-bordered">
+						<thead >
+						  <tr class="success">
+							<th class="text-center" width="20%">Item</th>
+							<th class="text-center" width="10%">Quantity</th>
+							<th class="text-center" width="5%">Currency</th>
+							<th class="text-center" width="5%">Price</th>
+							<th class="text-center" width="20%">SubTotal</th>
+						  </tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="row in data.tableTr | filter as filterAry" repeat-finish="renderFinish()" >
+								<td class="text-left" >
+									<select ng-change="$pinput.unit[$index] = changePurchaseItem($pinput.item[$index])" name="item[]" ng-model="$pinput.item[$index]" ng-init="$pinput.item[$index] = 'null'" class="form-control" required="required">
+										<option value="null">please select</option>
+										<option  ng-repeat="option in data.form_row.itemList" value="{{option.id}}" ng-bind="option.full_name"></option>
+									</select>
+								</td>
+								<td class="text-left">
+									<div class="form-group row">
+										<div class="col-xs-6">
+											<input size name="quantity[]" type="number" min="0" ng-model="$pinput.unit_value[$index]" ng-init="$pinput.unit_value[$index] =0" class="form-control input-sm" required="required" min="1">
+										</div>
+										<div class="col-xs-6">
+											<input name="unit[]" ng-readonly="true" ng-model="$pinput.unit[$index]"  ng-init="$pinput.unit[$index] =''" class="form-control">
+										</div>
+									 </div>
+								</td>
+								<td>
+									<select name="currency[]" ng-model="data.row.currency[$index]"  ng-init="data.row.currency[$index] ='khr'" class="form-control">
+										<option value="usd">usd</option>
+										<option value="khr">khr</option>
+									</select>
+								</td>
+								<td>
+									<input name="price[]" ng-model="$pinput.price[$index]" type="number" ng-init="$pinput.price[$index] =0"  step="0.01" required="required" class="form-control">
+								</td>
+								<td>
+									<input name="subtotal[]" ng-readonly="true"  ng-model="data.row.subtotal[$index]" ng-bind="data.row.subtotal[$index] = $pinput.price[$index] * $pinput.unit_value[$index]"  required="required" class="form-control">
+								</td >
+							</tr>{{sumTotal(data.row.subtotal,data.row.currency)}}
+							<tr class="warning"  >
+								<td colspan="4" class="text-danger">
+									<h1>Total</h1>
+								</td>
+								<td colspan="4" class="text-danger text-left">
+									<h3>
+										usd：{{data.sumTotal.usd}}
+										khr：{{data.sumTotal.khr}}
+										<input type="hidden" name="usd_total" value="{{data.sumTotal.usd}}">
+										<input type="hidden" name="khr_total" value="{{data.sumTotal.khr}}">
+										<input type="submit" class="btn btn-success" value="Submit">
+									</h3>
+								</td>
+							</tr>
+						</tbody>
+				  </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+

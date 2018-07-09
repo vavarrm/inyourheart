@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" ng-app="adminApp">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!-- Meta, title, CSS, favicons, etc. -->
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" href="images/favicon.ico" type="image/ico" />
+
+		<title>inyourheart</title>
+
+		<!-- Bootstrap -->
+		<link href="/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+		<!-- Font Awesome -->
+		<link href="/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+		<!-- NProgress -->
+		<link href="/vendors/nprogress/nprogress.css" rel="stylesheet">
+		<!-- iCheck -->
+		<link href="/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+
+		<!-- bootstrap-progressbar -->
+		<link href="/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+
+		
+		
+		<!-- JQVMap -->
+		<link href="/vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet"/>
+		<!-- bootstrap-daterangepicker -->
+		<link href="/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+		<!-- jquery-ui.css -->
+		<link rel="stylesheet" href="/css/jquery-ui/1.12.1/jquery-ui.min.css">
+		
+		<!-- Datatables -->
+		<link href="/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+		<link href="/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+		<link href="/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+		<link href="/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+		<link href="/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+		
+		<!-- Custom Theme Style -->
+		<link href="/build/css/custom.min.css" rel="stylesheet">
+		
+		<style>
+			iframe { 
+				width:100%; 
+				padding:0; 
+				border:0;
+			}
+			body{
+				height :100%;
+				overflow-y: hidden;
+			}
+			/* fallback */
+			@font-face {
+			  font-family: 'Material Icons';
+			  font-style: normal;
+			  font-weight: 400;
+			  src: url(/admin/wolf/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+			}
+
+			.material-icons {
+			  font-family: 'Material Icons';
+			  font-weight: normal;
+			  font-style: normal;
+			  font-size: 24px;
+			  line-height: 1;
+			  letter-spacing: normal;
+			  text-transform: none;
+			  display: inline-block;
+			  white-space: nowrap;
+			  word-wrap: normal;
+			  direction: ltr;
+			  -webkit-font-feature-settings: 'liga';
+			  -webkit-font-smoothing: antialiased;
+			}
+		</style>
+	</head>
+
+<body class="nav-md"  ng-controller="bodyCtrl" >
+    <div class="container body" >
+      <div class="main_container">
+			<div class="col-md-3 left_col">
+			  <div class="left_col scroll-view">
+				<div class="navbar nav_title" style="border: 0;">
+				  <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>后台</span></a>
+				</div>
+				<div class="clearfix"></div>
+				<!-- menu profile quick info -->
+				<div class="profile clearfix">
+				  <div class="profile_pic">
+					<img src="images/img.jpg" alt="..." class="img-circle profile_img">
+				  </div>
+				  <div class="profile_info">
+					<span>Welcome,</span>
+					<h2 ng-bind="admin.account">John Doe</h2>
+				  </div>
+				</div>
+				<!-- /menu profile quick info -->
+				<br />
+				<!-- sidebar menu -->
+				<div  ng-include="'/admin/views/sidebar-menu.html'" ></div>
+				<!-- /sidebar menu -->
+			  </div>
+			</div>
+			<!-- top navigation -->
+			<div ng-include="'/admin/views/top_navigatio.html'" ng-init="init()" ></div>
+			<!-- /top navigation -->
+
+			<!-- page content -->
+			<div class="right_col" role="main" ng-show="panelShow">
+				<div class="row tile_count" ng-hide="true">
+					<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" ng-repeat="(key,row) in socket_push_data.top">
+						<span class="count_top" ng-bind="key+':'"></span>
+						<div class="count"  ng-class="socket_push_data.order_total_add == true?'red':''" ng-bind="row.value"></div>
+					</div>
+				</div>
+				<div  role="tabpanel" data-example-id="togglable-tabs">
+				  <ul id="myTab" class="nav nav-tabs" role="tablist">
+				
+				  </ul>
+				  <div id="myTabContent" class="tab-content">
+		
+				  </div>
+				</div>
+			</div>
+			<!-- /page content -->
+		</div>
+    </div>
+	<audio id="carteSoudCtrl1">
+		<source src="/mp3/calltuktulk.mp3" type="audio/mpeg">
+	</audio>
+	<div ng-include="'/admin/views/dialog.html'"></div>
+	<!-- jquery -->
+	<script src="/vendors/jquery/dist/jquery.min.js"></script>
+	<script src="/js/jquery.playSound.js"></script>
+    <!-- Bootstrap -->
+    <script src="/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+	<!-- jQuery UI -->
+    <script src="/js/jquery-ui/1.12.1/jquery-ui.min.js"></script>
+    <!-- FastClick -->
+    <script src="/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="/vendors/nprogress/nprogress.js"></script>
+    <!-- bootstrap-progressbar -->
+    <script src="/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+
+
+	
+	<!-- iCheck -->
+    <script src="/vendors/iCheck/icheck.min.js"></script>
+	<!-- gmap -->
+	<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA66yV4atZJx0ELMs8MFzefwk1CtqAJCJo"></script> -->
+	<!-- angular -->
+	<script src="/js/angular/angular.min.js"></script>
+	<script src="/js/angular/angular-route.min.js"></script>
+	<script src="/js/angular/angular-cookies.min.js"></script>
+	<!-- webcokect -->
+	<script src='/js/socket.io.js'></script>
+	<!-- Custom Theme Scripts -->
+	
+	<script src="/js/admin/script.js"></script>
+	<script src="/build/js/custom.js"></script>
+	</body>
+</html>

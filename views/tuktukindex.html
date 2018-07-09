@@ -1,0 +1,244 @@
+<style>
+	.bs-calltoaction{
+    position: relative;
+    width:auto;
+    padding: 15px 25px;
+    border: 1px solid black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+    .bs-calltoaction > .row{
+        display:table;
+        width: calc(100% + 30px);
+    }
+     
+        .bs-calltoaction > .row > [class^="col-"],
+        .bs-calltoaction > .row > [class*=" col-"]{
+            float:none;
+            display:table-cell;
+            vertical-align:middle;
+        }
+
+            .cta-contents{
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+                .cta-title{
+                    margin: 0 auto 15px;
+                    padding: 0;
+                }
+
+                .cta-desc{
+                    padding: 0;
+                }
+
+                .cta-desc p:last-child{
+                    margin-bottom: 0;
+                }
+
+            .cta-button{
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+@media (max-width: 991px){
+    .bs-calltoaction > .row{
+        display:block;
+        width: auto;
+    }
+
+        .bs-calltoaction > .row > [class^="col-"],
+        .bs-calltoaction > .row > [class*=" col-"]{
+            float:none;
+            display:block;
+            vertical-align:middle;
+            position: relative;
+        }
+
+        .cta-contents{
+            text-align: center;
+        }
+}
+
+
+
+.bs-calltoaction.bs-calltoaction-default{
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.bs-calltoaction.bs-calltoaction-primary{
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+.bs-calltoaction.bs-calltoaction-info{
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
+
+.bs-calltoaction.bs-calltoaction-success{
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+
+.bs-calltoaction.bs-calltoaction-warning{
+    color: #fff;
+    background-color: #f0ad4e;
+    border-color: #eea236;
+}
+
+.bs-calltoaction.bs-calltoaction-danger{
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+
+.bs-calltoaction.bs-calltoaction-primary .cta-button .btn,
+.bs-calltoaction.bs-calltoaction-info .cta-button .btn,
+.bs-calltoaction.bs-calltoaction-success .cta-button .btn,
+.bs-calltoaction.bs-calltoaction-warning .cta-button .btn,
+.bs-calltoaction.bs-calltoaction-danger .cta-button .btn{
+    border-color:#fff;
+}
+
+label, input { display:block; }
+    input.text { margin-bottom:12px; width:95%; padding: .4em; }
+    fieldset { padding:0; border:0; margin-top:25px; }
+    h1 { font-size: 1.2em; margin: .6em 0; }
+    div#users-contain { width: 350px; margin: 20px 0; }
+    div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+    div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+    .ui-dialog .ui-state-error { padding: .3em; }
+    .validateTips { border: 1px solid transparent; padding: 0.3em; }
+	#mymap{
+        height: 400px;
+        width: 100%;
+   }
+  
+}
+</style>
+<div ng-init="tuktukinit()">
+	<div  ng-include="'/views/nav.html'"></div>
+	<div id="mymap"></div>
+	<div class="col-12">
+		<div class="bs-calltoaction bs-calltoaction-primary" >
+			<div class="row" >
+				<div class="col-md-9 cta-contents">
+					<h3 class="cta-title">Its a Call To Action</h3>
+					<div class="cta-desc">
+						<strong>User Phone ：<a href="callto:{{data.order.phone}}" ng-bind="data.order.phone"></a></strong>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	var uluru = {lat: 10.6129732, lng: 103.5294845};
+	var mymapdiv =$('#mymap'); 
+	var directionDisplay;
+	var directionsService = new google.maps.DirectionsService();
+	var map ;
+	var icons = 
+	{
+		start: new google.maps.MarkerImage
+		(
+			'/images/call-taxi.png',
+			new google.maps.Size( 44, 32 ),
+			new google.maps.Point( 0, 0 ),
+			new google.maps.Point( 22, 32 )
+		),
+		end: new google.maps.MarkerImage(
+			'/images/ace-of-spades.png',
+			new google.maps.Size( 44, 32 ),
+			new google.maps.Point( 0, 0 ),
+			new google.maps.Point( 22, 32 )
+		),
+		tuktuk:new google.maps.MarkerImage(
+			'/images/tuk-tuk.png',
+			new google.maps.Size( 44, 32 ),
+			new google.maps.Point( 0, 0 ),
+			new google.maps.Point( 22, 32 )
+		)
+	};
+	map = new google.maps.Map(mymapdiv[0], 
+	{
+		center:uluru,
+		zoom: 14,
+		disableDefaultUI: true
+	});
+	
+	directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+	directionsDisplay.setMap(map);
+	function callRute(){
+		var end = '10.6129732,103.5294845';
+		var start = '10.623460380168895,103.52388560771942';
+		var request = 
+		{
+		  origin:start, 
+		  destination:end,
+		  travelMode: google.maps.DirectionsTravelMode.DRIVING
+		};
+		directionsService.route(request, function(response, status) {
+		  if (status == google.maps.DirectionsStatus.OK) 
+		  {
+			directionsDisplay.setDirections(response);
+			var myRoute = response.routes[0];
+			var leg = response.routes[ 0 ].legs[ 0 ];
+
+			makeMarker( leg.start_location, icons.start, "title" );
+			makeMarker( leg.end_location, icons.end, 'title' );
+		  }
+		});
+	}
+	
+
+
+	function makeMarker( position, icon, title ) 
+	{
+		var marker = new google.maps.Marker({
+		  position: position,
+		  map: map,
+		  icon: icon,
+		  title: title
+		});
+		return marker;
+	}
+	
+	
+	google.maps.event.addListener(map, 'click', function( event ){
+		<!-- alert( "Latitude: "+event.latLng.lat()+" "+", longitude: "+event.latLng.lng() );  -->
+		console.log(event.latLng.lat());
+		console.log(event.latLng.lng());
+	});
+	
+
+	
+	<!-- if (navigator.geolocation)  -->
+	<!-- { -->
+		<!-- navigator.geolocation.getCurrentPosition(function(position) { -->
+            <!-- var pos = { -->
+              <!-- lat: position.coords.latitude, -->
+              <!-- lng: position.coords.longitude -->
+            <!-- }; -->
+			<!-- makeMarker( pos, icons.tuktuk, 'title' ); -->
+            <!-- infoWindow.setPosition(pos); -->
+            <!-- infoWindow.setContent('Location found.'); -->
+            <!-- map.setCenter(pos); -->
+          <!-- }, function() { -->
+				<!-- handleLocationError(true, infoWindow, map.getCenter()); -->
+          <!-- }); -->
+	<!-- } else { -->
+          // Browser doesn't support Geolocation
+          <!-- handleLocationError(false, infoWindow, map.getCenter()); -->
+		  <!-- console.log('d'); -->
+	<!-- } -->
+</script>

@@ -1,0 +1,55 @@
+<div ng-init="data.step=1;init('registerForm')">
+	<div  ng-include="'/views/nav.html'"></div>
+	<div class="container" ng-show="data.step==1">
+		<div class="this-container">
+			<form class="col-12">
+				<center>
+					<br/>
+					<h4  class="this-title" style="">Create Account</h4>
+				</center>
+				<div class="col-12 form-group">
+					<label for="exampleInputEmail1">First Name</label>
+					<input type="text"  maxlength="50" ng-model="data.input.fname"  class="form-control" placeholder="First Name"  required>
+				</div>
+				<div class="col-12 form-group">
+					<label for="exampleInputEmail1">Last Name</label>
+					<input type="text" maxlength="50" ng-model="data.input.lname"  class="form-control" placeholder="Last Name"  required>
+				</div>
+				<div class="col-12 form-group">
+					<label for="exampleInputEmail1">Phone</label>
+					<div class="input-group ">
+						<div class="input-group-prepend">
+							<div class="input-group-text">+855</div>
+						</div>
+						<input type="text"   ng-model="data.input.phone"    maxlength="9" class="form-control" placeholder="Phone"  required>
+					</div>	
+				</div>
+				<div class="col-12 form-group">
+					<label for="exampleInputEmail1">Password</label>
+					<input  type="password"  maxlength="12"  ng-model="data.input.password" title="password must 8-12 English and Number" pattern="^([a-zA-Z0-9]{8,12})$"   class="form-control" placeholder="Password"  required>
+				</div>
+				<div class="col-12 form-group">
+					<label for="exampleInputEmail1">Password confirm</label>
+					<input  type="password" maxlength="12"  ng-model="data.input.c_password"  class="form-control" placeholder="Password confirm" pattern="^([a-zA-Z0-9]{8,12})$"  required>
+				</div>
+				<div class="col-12 form-group">
+					<button type="submit" ng-click="singup();$event.preventDefault();" class="btn btn-danger">Sign Up <i class="fa fa-send-o"></i></button>
+					<button type="reset" class="btn  btn-danger">Cancel <i class="fa fa-refresh"></i></button>
+				</div>
+				<div class="col-12">
+					<div class="separator">
+						<p class="change_link">Already a member ?
+							<a href="login.html" class="to_register"> Log in </a>
+						</p>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</form>
+		</div>
+	</div>
+	<div class="container" ng-show="data.step==2" ng-include="'/views/confirm.html'"></div>
+	<div  ng-show="data.step==3"  ng-include="'/views/calltuktuk.html'"></div>
+	<div  ng-show="data.step==4"  ng-include="'/views/wait.html'"></div>
+</div>
+<div  ng-include="'/views/footer.html'"></div>

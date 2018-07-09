@@ -1,0 +1,40 @@
+<div class="this-container"  ng-init="data.countdown = 0 ">
+	<div class="col-12">
+		<form>
+			<center>
+				<h4 class="font-weight-bold mt-3">Verify Code</h4>
+			</center>
+			<div class="col-12 form-group">
+				<label for="exampleInputEmail1">Phone</label>
+				<div class="input-group ">
+					<div class="input-group-prepend">
+						<div class="input-group-text">+855</div>
+					</div>
+					<input type="text"   ng-model="data.input.phone"    maxlength="9" class="form-control" placeholder="Phone"  disabled readonly required>
+				</div>	
+			</div>
+			<div class="col-12 form-group">
+				<label for="">Verify Your Code :</label>
+				<input type="text" name="code" ng-model="data.input.verify_code" class="form-control" maxlength="6" placeholder="Verify your code..." required=""/>
+			</div>
+			<br/>
+			<div class="form-group col-12">
+				<button type="button" ng-click="verifyCode()" class="btn btn-danger">
+					<i class="fa fa-check-square-o"></i>
+					Confirm 
+				</button>
+				<button  type="button" ng-click="resendVerifyCode()" class="btn btn-danger" ng-disabled="data.resenddisabled == true">
+					<i	class="fa fa-mail-reply"></i> Resend
+				</button>
+			</div>
+			<div class="col-sm-12">
+				<div class="separator">
+					<p class="change_link" >if no get please wait {{60- data.countdown}} second can resend aegin</p>
+					<div class="clearfix"></div>
+					<br />
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</form>
+	</div>
+</div>

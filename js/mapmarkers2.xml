@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<markers>
+    <marker id="1" name="Golden Lion" address="1/28 Macleay Street, Elizabeth Bay, NSW" lat="10.610662718107225"
+            urls="http://mobiletest.me/apple_iphone_6s_plus/6520294"
+            lng="103.52377886245426" type="Driver" />
+    <marker id="2" name="Yadoly" address="580 Darling Street, Rozelle, NSW" lat="10.6090" lng="103.5241" type="Driver" />
+    <marker id="3" name="New Casino" address="76 Wilford Street, Newtown, NSW" lat="10.6128561" lng="103.5298" type="Driver" />
+
+</markers>

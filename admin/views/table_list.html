@@ -1,0 +1,176 @@
+<div class="x_panel" ng-init="table_pageinfo.p ='1'" style="overflow-y:scroll;">
+	<div class="x_title">
+		<ul class="nav navbar-right panel_toolbox">
+			<li><a class="collapse-link" ng-click="back();"><i class="fa fa-arrow-left"></i></a></li>
+			<li><a ng-click="tableAdd()" ng-if="data.form.table_add !==undefined"  class="close-link"><i class="fa fa-plus"></i></a></li>
+			<li><a ng-click="tableClose()" class="close-link"><i class="fa fa-close"></i></a></li>
+		</ul>
+		<div class="clearfix"></div>
+	</div>
+	<div class="x_content">
+		<div class="dataTables_wrapper form-inline dt-bootstrap no-footer" >
+			<div class="row tile_count" >
+				<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" ng-repeat="(key,row) in data.table_subtotal_fields ">
+					<span class="count_top"><i class="fa fa-dollar"></i>{{row.AS}}</span>
+					<div class="count" ng-bind="data.table_subtotal_data[key]">2500</div>
+				</div>
+				<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" ng-repeat="row in socket_push_data">
+					<span class="count_top"><i class="fa fa-dollar" ng-bind="row.name"></i></span>
+					<div class="count" ng-bind="row.value">2500</div>
+				</div>				
+			</div>
+			<div class="row">
+				<div class="col-sm-2">
+					<div>
+						<label>
+							<font style="vertical-align: inherit;">
+								<font style="vertical-align: inherit;">show </font>
+							</font>
+							<select name="datatable_length" ng-change="changeLimit()" ng-model="data.table_pageinfo.limit"  ng-init="data.table_pageinfo.limit='25'" class="form-control input-sm">
+								<option value="10">
+									<font style="vertical-align: inherit;">
+										<font style="vertical-align: inherit;">10</font>
+									</font>
+								</option>
+								<option value="25">
+									<font style="vertical-align: inherit;">
+										<font style="vertical-align: inherit;">25</font>
+									</font>
+								</option>
+								<option value="50">
+									<font style="vertical-align: inherit;">
+										<font style="vertical-align: inherit;">50</font>
+									</font>
+								</option>
+								<option value="100">
+									<font style="vertical-align: inherit;">
+										<font style="vertical-align: inherit;">100</font>
+									</font>
+								</option>
+							</select>
+							<font style="vertical-align: inherit;">
+								<font style="vertical-align: inherit;">entries</font>
+							</font>
+						</label>
+					</div>
+				</div>
+				<div class="col-sm-10">
+					<div>
+						<label ng-if="data.table_form.datetimeSearchControl && user_terminal =='pc'" >
+							<font style="vertical-align: inherit;">
+								<font style="vertical-align: inherit;" >日期：</font>
+							</font>
+							<input  type="search" ng-model="data.table_search.datetime_start" ng-init="dateTimeSearchInit ('date_start');"  ng-enter="searchClick();"  class="form-control input-sm date_start" placeholder="起" >&nbsp;&nbsp;~&nbsp;
+							<input  type="search"  ng-model="data.table_search.datetime_end"   ng-init="dateTimeSearchInit ('date_end');"  ng-enter="searchClick();"  class="form-control input-sm date_end" placeholder="迄" >&nbsp;&nbsp;&nbsp;
+						</label>
+						<label ng-if="data.table_form.datetimeSearchControl  && user_terminal =='cellPhone'" >
+							<font style="vertical-align: inherit;">
+								<font style="vertical-align: inherit;" >日期：</font>
+							</font>
+							<input type="datetime-local"  ng-model="data.table_search.datetime_start"   class="form-control date_start input-sm" >~
+						</label>
+						<label ng-if="data.table_form.datetimeSearchControl  && user_terminal =='cellPhone'" >
+							<input type="datetime-local"  ng-model="data.table_search.datetime_end"     class="form-control date_end input-sm"  >
+						</label>
+						<label ng-repeat="(key, value) in data.table_form.inputSearchControl">
+							<font style="vertical-align: inherit;">
+								<font style="vertical-align: inherit;" ng-bind="key+':'"></font>
+							</font>
+							<input type="search" ng-model="data.table_search[key]"  ng-enter="searchClick();"  class="form-control input-sm" placeholder="" >&nbsp;&nbsp;&nbsp;
+						</label>
+						<label ng-if="data.table_form.dateSearchControl && user_terminal =='pc'" >
+							<font style="vertical-align: inherit;">
+								<font style="vertical-align: inherit;" >日期：</font>
+							</font>
+							<input  type="search" ng-model="data.table_search.datetime_start" ng-init="dateSearchInit('date_start');"  ng-enter="searchClick();"  class="form-control input-sm date_start" placeholder="起" >&nbsp;&nbsp;~&nbsp;
+							<input  type="search"  ng-model="data.table_search.datetime_end"   ng-init="dateSearchInit('date_end');"  ng-enter="searchClick();"  class="form-control input-sm date_end" placeholder="迄" >&nbsp;&nbsp;&nbsp;
+						</label>
+						<label ng-if="data.table_form.dateSearchControl  && user_terminal =='cellPhone'" >
+							<font style="vertical-align: inherit;">
+								<font style="vertical-align: inherit;" >日期：</font>
+							</font>
+							<input type="datetime-local"  ng-model="data.table_search.datetime_start"   class="form-control date_start input-sm" >~
+						</label>
+						<label ng-if="data.table_form.dateSearchControl  && user_terminal =='cellPhone'" >
+							<input type="datetime-local"  ng-model="data.table_search.datetime_end"     class="form-control date_end input-sm"  >
+						</label>
+						<label ng-repeat="(key, value) in data.table_form.inputSearchControl">
+							<font style="vertical-align: inherit;">
+								<font style="vertical-align: inherit;" ng-bind="key+':'"></font>
+							</font>
+							<input type="search" ng-model="data.table_search[key]"  ng-enter="searchClick();"  class="form-control input-sm" placeholder="" >&nbsp;&nbsp;&nbsp;
+						</label>
+						
+						<label ng-repeat="(key, value) in data.table_form.selectSearchControl">
+							<font style="vertical-align: inherit;">
+								<font style="vertical-align: inherit;" ng-bind="key+':'"></font>
+							</font>
+							<select  ng-change="select_search(key,data.table_search[key])" ng-model="data.table_search[key]" ng-init="data.table_search[key]==''" ng-enter="searchClick();"  class="form-control" >
+								<option value="">please select</option>
+								<option ng-repeat="option in value" value="{{option.value}}" ng-bind="option.text"></option>
+							</select>&nbsp;&nbsp;&nbsp;
+						</label>
+						
+						<button type="submit" ng-click="searchClick()" class="btn btn-success">search</button>
+						<button type="submit" ng-click="searchReset()" class="btn btn-primary">reset</button>
+					</div>
+				</div>
+				<div class="col-sm-12" ng-if="data.table_button_list.length >0">
+					<button ng-repeat="row in data.table_button_list"  ng-click="clickbutton(row)" class="btn btn-success" ng-bind="row.pe_name"></button>
+				</div>
+			</div>
+			<div class="row"  ng-show="data.table_row.length >0">
+				<div class="col-sm-12" ng-init="tableListInit()">
+					<table  class="table table-striped table-bordered bulk_action dataTable no-footer">
+						<thead>
+							<tr role="row">
+								<th class="sorting" ng-class="data.table_order[filed] == 'DESC'?'sorting_desc':(data.table_order[filed] == 'ASC' ? 'sorting_asc':'')" ng-click="order(filed);" ng-repeat="(filed,value) in data.table_fields" ng-bind="value.AS" ng-hide="value.hide" ></th>
+								<th ng-if="data.form.table_del !==undefined || data.form.table_edit !==undefined || data.table_action_list.length >0"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="row in data.table_row">
+								<td ng-repeat="(filed,value) in data.table_fields" ng-hide="value.hide" >
+									<div ng-if="value.type ==undefined" ng-bind="row[filed]" ></div>
+									<div ng-if="value.type =='img'" >
+										<img ng-src="{{row[filed]}}"  />
+									</div>
+								</td>
+								<td ng-if="data.form.table_del !==undefined || data.form.table_edit !==undefined || data.table_action_list.length >0">
+									<button ng-if="data.form.table_del !==undefined" type="button" ng-click="del(row.id)" class="btn btn-default btn-xs">del</button>
+									<button ng-if="data.form.table_edit !==undefined" type="button" ng-click="edit(row.id)" class="btn btn-default btn-xs">edit</button>
+									<a ng-if="data.table_action_list.length >0" ng-repeat="action in data.table_action_list" ng-bind="action.pe_name" ng-click="actionClick(action,row.id)" class="btn btn-default btn-xs"> </a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="row"  ng-show="data.table_row.length >0">
+				<div class="col-sm-5">
+					<div class="dataTables_info"  role="status" a>Showing <span ng-bind="data.table_pageinfo.start"></span> to <span ng-bind="data.table_pageinfo.end"></span> of <span ng-bind="data.table_pageinfo.total"></span> entries</div>
+				</div>
+				<div class="col-sm-7">
+					<div class="dataTables_paginate paging_simple_numbers" >
+						<ul class="pagination">
+							<li class="paginate_button previous" ng-click="pagePrevious();$event.preventDefault();"  ng-class="'1'==data.table_pageinfo.p?'disabled':''" >
+								<a href="#" >Previous</a>
+							</li>
+							<li ng-class="($index +1)==data.table_pageinfo.p?'active':''" class="paginate_button" ng-repeat="n in [] | range:data.table_pageinfo.pages">
+								<a  ng-click="changePage($index +1);$event.preventDefault();" ng-bind="$index+1"></a>
+							</li>
+							<li class="paginate_button next " ng-click="pageNext();$event.preventDefault();" ng-class="data.table_pageinfo.p==data.table_pageinfo.pages?'disabled':''" >
+								<a href="#" >Next</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="row" ng-show="data.table_row.length <=0">
+				<div class="col-6">
+					<h2>查无资料</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

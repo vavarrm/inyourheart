@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-Hans" ng-app="pokerInsuranceApp">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>QR 搭車</title>
+	
+	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+	<!-- jquery-ui.css -->
+	<link rel="stylesheet" href="/css/jquery-ui/1.12.1/jquery-ui.min.css">
+	 <!-- Bootstrap -->
+    <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+	<!-- font-awesome CSS -->
+	<link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<!-- customer CSS -->
+    <link rel="stylesheet" href="/css/colors-metro.css">
+    <link rel="stylesheet" href="/css/shop-style.css">
+	
+</head>
+<body ng-controller="bodyCtrl" ng-init="init()">
+	<div ng-view ng-init="init();"></div>
+	<div  ng-include="'/views/module/dialog.html'"></div>
+	<!-- jquery -->
+	<script src="/js/jquery/1.12.4/jquery.min.js" ></script>	
+	<!-- bootstrp-->
+	<script src="/js/bootstrap/bootstrap.min.js"></script>
+	<!-- jQuery UI -->
+    <script src="/js/jquery-ui/1.12.1/jquery-ui.min.js"></script>
+	<!-- gmap -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA66yV4atZJx0ELMs8MFzefwk1CtqAJCJo"></script>
+	<!-- angular -->
+	<script src="/js/angular/angular.min.js"></script>
+	<script src="/js/angular/angular-route.min.js"></script>
+	<script src="/js/angular/angular-cookies.min.js"></script>
+	<!-- webcokect -->
+	<script src='/js/socket.io.js'></script>
+	<!-- customer js -->
+	<script src="/js/frontend/script.js"></script>
+	<script src="/js/frontend/min.js"></script>
+</body>
+</html>

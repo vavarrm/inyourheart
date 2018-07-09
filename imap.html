@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Location</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colors-metro.css">
+    <link rel="stylesheet" href="/css/shop-style.css">
+    <style>
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+            padding: 0px;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+            min-height: 400px;
+        }
+       .form-control{
+           width: 100%!important;
+       border-radius: 0px;
+       }
+        .container-p0{
+            padding: 0px!important;
+        }
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+            padding: 0px;
+        }
+        .container-p0{
+            padding: 0px!important;
+
+            position:relative;
+            margin-top: -5px;
+        }
+        li a{
+            color: #fff!important;
+        }
+        .navbar-brand{
+            color: white!important;
+        }
+        .map_size{
+            width: 100%; height: 100%;
+        }
+        .form-group{
+            padding-left: 5px!important;
+            padding-right: 5px!important;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="this-container this-metro-dark-red this-card this-padding">
+    <center> <h3 class="this-hide-small" > QR CODE SIHANOUKVILL  </h3></center>
+    <div class="container container-p0">
+        <nav class="navbar navbar-expand-lg navbar-light bg-faded this-text-white">
+            <a class="navbar-brand" href="/">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div id="navbarNavDropdown" class="navbar-collapse collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/feedback.html">Feedback</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact.html">Contact Us</a>
+                    </li>
+
+                </ul>
+                <ul class="navbar-nav">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register.html">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div class="container this-margin-top container-p0"   >
+
+    <div class="container container-p0 this-white" >
+        <form>
+            <div class="form-group" style="; z-index: 1000;position: absolute;width: 50%" >
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend ">
+                        <label class="input-group-text this-metro-dark-red" for="inputGroupSelect01">From</label>
+                    </div>
+                    <select class="custom-select" id="start">
+                        <option value=" 10.616247, 103.533943">Happy Coffee</option>
+                        <option value="10.616248,103.523762">333 Apartments</option>
+                        <option value="10.604387,103.534692">7 Jan Boutique</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="form-group "style="; z-index: 1000;position: absolute; right: 0px; margin-left: 45%; width: 50%" >
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend ">
+                        <label class="input-group-text this-metro-dark-red" for="inputGroupSelect01">To : </label>
+                    </div>
+                    <select class="custom-select" id="end" >
+                        <option value="10.607372,103.521362">Aristocrat Residence and Hotel</option>
+                        <option value="10.634437,103.504662">Backpacker Heaven</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="this-container" id="map"></div>
+            <div class="this-container this-padding this-metro-dark-red  " id="kms" style="font-size: 13px" >Where
+            you go ?</div>
+
+            <div class="form-group">
+                <label> You can request driver transport </label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend ">
+                        <label class="input-group-text this-metro-dark-red" for="inputGroupSelect01">Transport</label>
+                    </div>
+                    <select class="custom-select" id="inputGroupSelect01" required >
+                        <option value="1">Yes </option>
+                        <option value="2">No</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" rows="2" placeholder="message"  name="message" required></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class=" btn btn-danger"> Send </button>
+            </div>
+        </form>
+
+
+    </div>
+</div>
+<!-- Replace the value of the key parameter with your own API key. -->
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSYg7lk_d7AzrXc3L-nz6iOdIcnuCx4EU&callback=initMap">
+</script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+
+<script>
+    function initMap() {
+        var directionsService = new google.maps.DirectionsService;
+        var directionsDisplay = new google.maps.DirectionsRenderer({
+            draggable: true,
+            polylineOptions: {
+                strokeColor: "#F24639",
+                strokeWeight:3,
+            },
+			suppressMarkers: true
+        });
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: {lat: 10.607683, lng: 103.525305},
+            gestureHandling: "greedy",
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            unitSystem: google.maps.UnitSystem.METRIC,
+            provideRouteAlternatives: true,
+            suppressMarkers: true,
+        });
+        directionsDisplay.setMap(map);
+        var onChangeHandler = function() {
+
+            calculateAndDisplayRoute(directionsService, directionsDisplay, map);
+        };
+        document.getElementById('start').addEventListener('change', onChangeHandler);
+        document.getElementById('end').addEventListener('change', onChangeHandler);
+    }
+    var  mstart ="";
+    function calculateAndDisplayRoute(directionsService, directionsDisplay, map) 
+	{
+        var km='';
+        var from=document.getElementById('start').value;
+        var to=document.getElementById('end').value;
+        directionsService.route({
+            origin:from ,
+            destination:to ,
+            provideRouteAlternatives: false,
+            travelMode: google.maps.TravelMode.DRIVING,
+
+        }, function(response, status) {
+            if (status === google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+                km= response.routes[0].legs[0].distance.value;
+                from=document.getElementById('start');
+                to=document.getElementById('end');
+				 var endstep  = response.routes[0].legs[0].steps.length;
+				 var marker = new google.maps.Marker({
+					position: response.routes[0].legs[0].steps[0].start_point,
+					map: map,
+					title: 'Hello World!',
+					icon :'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Chartreuse-icon.png'
+				  });
+				  var mstart = new google.maps.Marker({
+					position: response.routes[0].legs[0].steps[endstep-1].end_point,
+					map: map,
+					title: 'Hello World!'
+				  });
+
+                var frm= from.options[from.selectedIndex].text;
+                var end= to.options[to.selectedIndex].text;
+                document.getElementById('kms').innerHTML='From : '+frm + ' to '+ end + '<br/>= ' +km/1000 +' Km';
+            } else {
+                window.alert('Directions request failed due to ' + status);
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

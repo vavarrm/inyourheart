@@ -1,0 +1,206 @@
+
+<!DOCTYPE html >
+<html>
+
+<head lang="en">
+    <title>Location</title>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+
+    <!-- Bootstrap stuff -->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colors-metro.css">
+    <link rel="stylesheet" href="/css/shop-style.css">
+</head>
+
+<body >
+<div class="this-container this-metro-dark-red this-padding this-card ">
+    <div class="this-right">
+        <a href="#">English</a> / <a href="#">Chines</a>
+    </div>
+</div>
+<div class="container" style="padding: 0px" >
+    <div class="col-sm-12 this-container " style="padding: 0px; margin-top: 10px; margin-bottom: 10px">
+        <button class="btn btn-success  col-xs-6 col-sm-3 col-md-6" onclick="initMap()" ><span
+                class="glyphicon glyphicon-hand-right"></span> Show Driver </button>
+        <button id="location" class="btn btn-danger col-xs-6 col-sm-3 col-md-6" onclick="GPS()"  ><span
+                class="glyphicon glyphicon-map-marker"></span>Your Location</button>
+    </div>
+    <div class="col-sm-12"​ style=" margin-top: 10px; background-color: whitesmoke; padding:0px">
+        <div class="this-container" id="map" style="width:100%;min-height:450px;"></div>
+    </div>
+    <div class="col-sm-12" style="padding: 0px" >
+
+        <form method="post" action="">
+            <div class="form-group">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <input type="text" class="form-control" style="display: none"   id="o_consignee"
+                           ng-model="u_id" name="u_id" required>
+                    <input type="text" class="form-control"  id="us3-lat" name="lat" required readonly />
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 ">
+                    <input type="text" class="form-control" id="us3-lon" name="lag" required="required" readonly/>
+                </div>
+            </div>
+            <br/>
+
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-6 col-md-6 this-padding">
+                    <input type="text" class="form-control " name="title" placeholder="Title name ... "required="required">
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 this-padding">
+                    <input type="text" class="form-control " name="desc" placeholder="Description.." required="required">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-6 col-md-6 this-padding">
+                    <button onclick="window.history.back();"  class="btn btn-danger"  style="width:100px" >
+                        <span class="glyphicon glyphicon-circle-arrow-left"></span>Back
+                    </button>
+                    <input type="submit" class="btn btn-danger" value="Save" name="save_google" style="margin-left: 15px; width: 100px">
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<div class="clearfix"></div>
+<script>
+
+    var customLabel = {
+        restaurant: {
+            label: 'R'
+        },
+        bar: {
+            label: 'B'
+        }
+    };
+
+    function initMap() {
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: new google.maps.LatLng(10.610662,103.52377886),
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            unitSystem: google.maps.UnitSystem.METRIC,
+            provideRouteAlternatives: true,
+            suppressMarkers: true,
+
+        });
+
+        var infoWindow = new google.maps.InfoWindow;
+        // Change this depending on the name of your PHP or XML file
+        downloadUrl('/js/mapmarkers2.xml', function(data) {
+            var xml = data.responseXML;
+            var markers = xml.documentElement.getElementsByTagName('marker');
+            Array.prototype.forEach.call(markers, function(markerElem) {
+                var id = markerElem.getAttribute('id');
+                var name = markerElem.getAttribute('name');
+                var address = markerElem.getAttribute("urls");
+                var type = markerElem.getAttribute('type');
+                var point = new google.maps.LatLng(
+                    parseFloat(markerElem.getAttribute('lat')),
+                    parseFloat(markerElem.getAttribute('lng')));
+
+                var infowincontent = document.createElement('div');
+                var strong = document.createElement('strong');
+                strong.textContent = name
+                infowincontent.appendChild(strong);
+                infowincontent.appendChild(document.createElement('br'));
+                var newLink = document.createElement('a');
+                newLink.innerHTML  = '<a href="/booking.html?id='+id+'"> Booking </a>';
+                infowincontent.appendChild(newLink);
+
+
+
+
+                //var icon = customLabel[type] || {};
+                var icon='http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Chartreuse-icon.png';
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: point,
+                    //label: icon.label
+                    icon :'/images/icon/icons8-food-truck-24.png'
+                });
+                marker.addListener('click', function() {
+
+                    infoWindow.setContent(infowincontent);
+                    infoWindow.open(map, marker);
+                });
+
+            });
+        });
+    }
+
+    function downloadUrl(url, callback) {
+        var request = window.ActiveXObject ?
+            new ActiveXObject('Microsoft.XMLHTTP') :
+            new XMLHttpRequest;
+
+        request.onreadystatechange = function() {
+            if (request.readyState == 4) {
+                request.onreadystatechange = doNothing;
+                callback(request, request.status);
+            }
+        };
+
+        request.open('GET', url, true);
+        request.send(null);
+    }
+    function doNothing() {}
+    function GPS() {
+        var lat=0,lng=0;
+        // user position
+        var make = new google.maps.Marker({
+            map: map,
+            icon :'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Chartreuse-icon.png'
+        });
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                    enableAutocomplete: false,
+                    onchanged: function (currentLocation, s, isMarkerDropped) {
+                    }
+                };
+
+                $('#us3-lat').val(pos.lat);
+                $('#us3-lon').val(pos.lng);
+
+                make.setPosition(pos);
+                //infoWindow.setContent('Location found.');
+                map.setCenter(pos);
+            }, function() {
+                handleLocationError(true, make, map.getCenter());
+            });
+        } else {
+            // Browser doesn't support Geolocation
+            handleLocationError(false, make, map.getCenter());
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+        }
+
+    }
+
+
+</script>
+<script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false&key=AIzaSyCiefERVuIO9WXLFbtqq1Jquq1uOi2lQhM&callback=initMap">
+</script>
+
+</body>
+
+</html>

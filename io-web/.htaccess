@@ -1,0 +1,18 @@
+<IfModule mod_env.c>
+	SetEnv DB_USERNAME root
+	SetEnv DB_PASSWORD root
+	SetEnv DB_NAME sihalive
+	SetEnv FB_APP_ID 2089567007939408
+	SetEnv FB_APP_SECRECT aa90c373e6ce575923a94d368039e343
+	SetEnv CI_ENV development
+	SetEnv SMS_USERNAME tsai_sms@smartmkn
+	SetEnv SMS_PASSWD 3xxkdkj@c
+	SetEnv SMS_REQUEST_URL http://client.mekongsms.com/api/postsms.aspx
+</IfModule>
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteBase /
+    RewriteCond $1 !^(index\.php|production|build|vendors|demo|admin|static|images|swf|third_party|uploads|js|css|assets|fonts|font-awesome|robots\.txt|$)
+    RewriteRule ^(.*)$ /index.php/$1 [L,QSA]	
+	
+</IfModule>

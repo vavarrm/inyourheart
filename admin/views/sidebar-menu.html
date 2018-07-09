@@ -1,0 +1,20 @@
+<div  id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+	<div class="menu_section">
+		<ul class="nav side-menu">
+			<li ng-repeat="menu in sidebarMenuList" >
+				<a>
+					<i class="fa {{menu.pe_icon}}"></i>
+					<span ng-bind="menu.pe_name">restaurant</span>
+					<span class="fa fa-chevron-down"></span>
+				</a>
+				<ul class="nav child_menu" >
+					<li ng-repeat="child in menu.child" ng-click="sidebar_menu_click(menu.pe_control,child);$event.stopPropagation();">
+						<a ng-bind="child.pe_name"></a>
+					</li>
+
+				</ul>
+				<div ng-if="$last" ng-init="sidebarMenuListInit()"> </div>
+			</li>
+		</ul>
+	</div>
+</div>

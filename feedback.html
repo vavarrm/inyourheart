@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Location</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src='https://maps.google.com/maps/api/js?sensor=false&libraries=places'></script>
+    <script src="https://www.jqueryscript.net/demo/Location-Picker-Place-Autocomplete-Plugin-For-Google-Maps-Location-Picker/dist/locationpicker.jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colors-metro.css">
+    <link rel="stylesheet" href="/css/shop-style.css">
+    <style>
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+            padding: 0px;
+        }
+        .container-p0{
+            padding: 0px!important;
+        }
+        li a{
+            color: #fff!important;
+        }
+        .navbar-brand{
+            color: white!important;
+        }
+    </style>
+</head>
+<body>
+<div class="this-container this-metro-dark-red  this-padding">
+    <center> <h3 > YADULY  CASINO </h3></center>
+    <div class="container container-p0">
+        <nav class="navbar navbar-expand-lg navbar-light bg-faded this-text-white navbar-fixed-top">
+            <a class="navbar-brand" href="/">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div id="navbarNavDropdown" class="navbar-collapse collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/feedback.html">Feedback</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact.html">Contact Us</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register.html">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+<div class="container " >
+        <div class="row ">
+            <div class="this-container this-padding">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
+                           aria-controls="nav-home" aria-selected="true">Review  </a>
+                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab"
+                           aria-controls="nav-profile" aria-selected="false">Review History </a>
+                    </div>
+                </nav>
+                <div class="tab-content this-margin-top" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                        <form id="frmfeedback" method="post" class="this-margin-top">
+                            <div class="row ">
+                                <div class="row justify-content-md-center this-border">
+                                    <div class="col-sm-4 " style="padding: 0px">
+                                        <img src="https://i.pinimg.com/originals/7e/de/7d/7ede7d417d214a2486a7adef945653af.jpg" class="img-fluid  ">
+                                    </div>
+                                    <div class="col-sm-8 this-padding">
+                                        <h5> Name...... </h5>
+                                        <p> your message </p>
+                                        <div class="">
+                                            <a href="/ifeedback.html" class="btn btn-danger btn-sm">
+                                                Review
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade " id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        <br/>
+                        <div class="row this-border" >
+                                    <div class="col-sm-4" style="padding: 0px">
+                                        <img src="https://i.pinimg.com/originals/7e/de/7d/7ede7d417d214a2486a7adef945653af.jpg" class="img-fluid">
+                                    </div>
+                                    <div class="col-sm-8 this-padding">
+                                        <h5> Name...... </h5>
+                                        <p> your message </p>
+
+                                    </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+</div>
+<footer class="container this-center this-margin-top ">
+    <br/><br/>
+    <p> CopyRight@2018</p>
+</footer>
+<script>
+    $("#frmfeedback").submit(function(e) {
+        var url = "/Api/Feedback/doInsert"; // the script where you handle the form input.
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: $("#frmfeedback").serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                if(data!==""){
+                    $("#frmfeedback")[0].reset();
+                    $('#myModal').modal('show');
+                }
+
+            }
+        });
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+    });
+</script>
+
+
+
+</body>
+</html>

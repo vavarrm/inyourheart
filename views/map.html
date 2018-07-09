@@ -1,0 +1,108 @@
+
+<div class="container" style="padding: 0px" >
+
+    <div class="col-sm-12">
+        <center> <h4 style="text-transform: uppercase; font-weight: bold">Add Your Location </h4></center>
+    </div>
+   <div class="col-sm-12"​ style="padding: 0px">
+       <div id="us3" style="width:100%;min-height:350px;border: 1px solid silver"></div>
+   </div>
+
+        <div class="col-sm-12" style="margin-top: 10px; padding: 0px">
+            <div id="out"></div>
+
+
+        </div>
+
+        <div class="col-sm-12" >
+            <div class="col-xs-6 col-sm-12 col-md-12 this-margin-bottom ">
+                <div id="location" class="btn btn-danger" style="width: 150px; right: 10px" ><span
+                        class="glyphicon glyphicon-map-marker"></span>Your Location</div>
+            </div>
+            <br/>
+            <form method="post" action="">
+
+                <div class="form-group">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <input type="text" class="form-control" style="display: none"   id="o_consignee"
+                               ng-model="u_id" name="u_id" required>
+                        <input type="text" class="form-control"  id="us3-lat" name="lat" required readonly />
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 ">
+                        <input type="text" class="form-control" id="us3-lon" name="lag" required="required" readonly/>
+                    </div>
+                </div>
+                <br/>
+
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-6 col-md-6 this-padding">
+                        <input type="text" class="form-control " name="title" placeholder="Title name ... "required="required">
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 this-padding">
+                        <input type="text" class="form-control " name="desc" placeholder="Description.." required="required">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-6 col-md-6 this-padding">
+                        <button onclick="window.history.back();"  class="btn btn-danger"  style="width:100px" >
+                            <span class="glyphicon glyphicon-circle-arrow-left"></span>Back
+                        </button>
+                        <input type="submit" class="btn btn-danger" value="Save" name="save_google"
+                               style="margin-left: 15px; width: 100px">
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <script>
+        var lat="0",lag="0";
+        function geoFindMe()
+        {
+
+
+            if (!navigator.geolocation){
+                output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+                return;
+            }
+            function success(position) {
+                lat  = position.coords.latitude;
+                lag = position.coords.longitude;
+                $('#us3').locationpicker({
+                    location: {
+                        latitude:lat,
+                        longitude:lag,
+                        zoom: 10,
+                    },
+                    radius:400,
+                    inputBinding: {
+                        latitudeInput: $('#us3-lat'),
+                        longitudeInput: $('#us3-lon'),
+                    },
+                    enableAutocomplete: false,
+                    onchanged: function (currentLocation, s, isMarkerDropped) {
+                    }
+                });
+            }
+            function error() {
+                alert("get location Error ");
+            }
+            navigator.geolocation.getCurrentPosition(success, error);
+        }
+
+        $('#location').on('click', function (exx) {
+            //geoFindMe();
+            exx.type = 'change';
+            $('#us3-lat').val(lat).trigger(exx);
+            $('#us3-lon').val(lag).trigger(exx);
+
+
+        })
+
+
+
+
+    </script>
+

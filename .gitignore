@@ -2,3 +2,4 @@
 /upload
 /Api/upload/_tmp
 /.idea
+/Api/*.htaccess

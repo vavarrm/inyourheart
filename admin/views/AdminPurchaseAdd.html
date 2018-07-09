@@ -35,7 +35,7 @@
 								<td class="text-left">
 									<div class="form-group row">
 										<div class="col-xs-6">
-											<input size name="quantity[]" type="number" min="0" ng-model="$pinput.unit_value[$index]" ng-init="$pinput.unit_value[$index] =0" class="form-control input-sm" required="required" min="1">
+											<input size name="quantity[]"  min="0"  step="0.01" type="number"  ng-model="$pinput.unit_value[$index]" ng-init="$pinput.unit_value[$index] =0" class="form-control input-sm" required="required">
 										</div>
 										<div class="col-xs-6">
 											<input name="unit[]" ng-readonly="true" ng-model="$pinput.unit[$index]"  ng-init="$pinput.unit[$index] =''" class="form-control">

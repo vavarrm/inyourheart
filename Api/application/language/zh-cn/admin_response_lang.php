@@ -7,4 +7,5 @@
 	$lang['005'] = "account does not exist";
 	$lang['006'] = "account is lock";
 	$lang['007'] = "password error";
+	$lang['008'] = "Not allowed";
 ?>

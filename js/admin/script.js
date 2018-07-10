@@ -415,11 +415,12 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 	
 	$scope.changePurchaseItem = function(id)
 	{
+		var ary = id.split("|&&|");
 		if(id == 'null')
 		{
 			return  null;
 		}
-		return  $scope.data.form_row.itemList[id].unit;
+		return  $scope.data.form_row.itemList[ary[0]].unit;
 	}
 	
 	$scope.editFormInit = function(func)

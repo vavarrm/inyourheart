@@ -36,11 +36,11 @@
 							</div>
 						</div>
 						<tbody>
-							<tr ng-repeat="row in data.tableTr | filter as filterAry" repeat-finish="renderFinish()" >
+							<tr ng-repeat="row in data.tableTr | filter as filterAry" >
 								<td class="text-left" >
 									<select ng-change="$pinput.unit[$index] = changePurchaseItem($pinput.item[$index])" name="item[]" ng-model="$pinput.item[$index]" ng-init="$pinput.item[$index] = 'null'" class="form-control" required="required">
 										<option value="null">please select</option>
-										<option  ng-repeat="option in data.form_row.itemList" value="{{option.full_name}}" ng-bind="option.full_name"></option>
+										<option  ng-repeat="option in data.form_row.itemList" value="{{option.id+'|&&|'+option.full_name}}" ng-bind="option.full_name"></option>
 									</select>
 								</td>
 								<td class="text-left">

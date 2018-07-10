@@ -253,6 +253,7 @@
 						$ary['quantity'][$key] <=0 
 					)
 					{
+						$status ='009';
 						$MyException = new MyException();
 						$array = array(
 							'el_system_error' 	=>'subtotal,  quantity lose zero ' ,
@@ -263,12 +264,14 @@
 						throw $MyException;
 					}
 					
+					$temp_ary = explode("|&&|",$value);
+					
 					$sql = "INSERT INTO purchase_detailed
 									(name,date,unit_price,amount,currency,unit,quantity,code)
 							VALUES 	(?,NOW(),?,?,?,?,?,?)
 							";
 					$bind = array(
-						$value,
+						$temp_ary[1],
 						$ary['price'][$key],
 						$ary['subtotal'][$key],
 						$ary['currency'][$key],

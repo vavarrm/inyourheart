@@ -326,8 +326,8 @@
 				}
 				
 				$sql = "INSERT INTO account	
-								(type,khr,usd,code)
-						VALUES 	('purchase',?,?,?)";
+								(type,khr,usd,code,operator)
+						VALUES 	('purchase',?,?,?,'-')";
 				$bind = array(
 					$ary['khr_total'],
 					$ary['usd_total'],

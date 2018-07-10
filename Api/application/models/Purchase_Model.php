@@ -135,7 +135,7 @@
 						p.*,
 						concat(ma.kh_name,' ',ma.en_name,' ',ma.zh_name) AS full_name	
 					FROM 
-							purchase  AS  p INNER JOIN material AS ma ON p.ma_id =  ma.id
+							purchase  AS  p LEFT JOIN material AS ma ON p.ma_id =  ma.id
 					WHERE p.code =?";
 			$bind= array(
 				$code

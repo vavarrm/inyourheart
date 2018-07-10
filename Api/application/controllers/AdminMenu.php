@@ -12,7 +12,7 @@ class AdminMenu extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Material_Model', 'material');
+        $this->load->model('Menu_Model', 'menu');
         $this->response_code = $this->language->load('admin_response');
         $this->request = json_decode(trim(file_get_contents('php://input'), 'r'), true);
         $this->get = $this->input->get();
@@ -313,15 +313,14 @@ class AdminMenu extends CI_Controller
 
 			
             $ary['fields'] = array(
-                'id'				   =>array('field'=>'t.id AS id','AS' =>'id'),
-                'full_name'				=>array('field'=>"concat(t.kh_name,' ',t.en_name,' ',t.zh_name) AS full_name",'AS' =>'full_name'),
-				'unit'				    		=>array('field'=>'t.unit AS unit','AS' =>'unit'),
+                'id'				 	  		=>array('field'=>'t.id AS id','AS' =>'id','hide'	=>true),
+                'full_name'						=>array('field'=>"concat(t.kh_name,' ',t.en_name,' ',t.zh_name) AS full_name",'AS' =>'full_name'),
             );
 			
 			
 		
 			
-            $list = $this->material->getList($ary);
+            $list = $this->menu->getList($ary);
 			
             $output['body'] = $list;
             $output['body']['fields'] = $ary['fields'] ;

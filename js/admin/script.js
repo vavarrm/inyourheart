@@ -276,6 +276,15 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 		$scope.data.tableTr.push({});
 	}
 	
+	$scope.changeAmount = function(unit_price, quantity, index)
+	{
+		var amount = unit_price *  quantity;
+		if(amount>0)
+		{
+			$scope.data.row.subtotal[index] = amount;
+		}
+	}		
+	
 	$scope.sumTotal = function(subtotal,currency)
 	{
 		var total = {
@@ -283,14 +292,16 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 			khr:0,
 		};
 
+		// console.log(subtotal);
+		
         angular.forEach(subtotal, function(value,key)
 		{
 			value = value || 0;
 			total[$scope.data.row.currency[key]]+=value;
         });
 
-		total.usd = total.usd.toFixed(2);
-		total.khr = total.khr.toFixed(2);
+		total.usd = parseInt(total.usd).toFixed(2);
+		total.khr = parseInt(total.khr).toFixed(0);
 
 		$scope.data.sumTotal = total
 	}

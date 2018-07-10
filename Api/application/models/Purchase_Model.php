@@ -132,11 +132,11 @@
 			}
 			
 			$sql ="	SELECT 
-						p.*,
-						concat(ma.kh_name,' ',ma.en_name,' ',ma.zh_name) AS full_name	
+						pd.*,
+						pd.name AS full_name	
 					FROM 
-							purchase  AS  p INNER JOIN material AS ma ON p.ma_id =  ma.id
-					WHERE p.code =?";
+							purchase_detailed  AS  pd
+					WHERE pd.code =?";
 			$bind= array(
 				$code
 			);
@@ -188,6 +188,18 @@
                     throw $MyException;
                 }
 				
+				if($ary['pay_amount_usd'] <=0 && $ary['pay_amount_khr'] <=0)
+				{
+					$status ="008";
+					$MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'Please Keyin Pay Amount' ,
+                        'status'	=>$status
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+				}
+				
 				$sql = "SELECT  
 							CONCAT('P',DATE_FORMAT(NOW(),'%Y%m%d') , LPAD(RIGHT(`code`,6)  + 1 ,6,0) ) AS code 
 						FROM account  
@@ -237,14 +249,13 @@
 					}
 					
 					if(
-						$ary['price'][$key] <=0 ||
 						$ary['subtotal'][$key] <=0 ||
 						$ary['quantity'][$key] <=0 
 					)
 					{
 						$MyException = new MyException();
 						$array = array(
-							'el_system_error' 	=>'price , subtotal,  quantity lose zero ' ,
+							'el_system_error' 	=>'subtotal,  quantity lose zero ' ,
 							'status'	=>$status
 						);
 						
@@ -252,8 +263,8 @@
 						throw $MyException;
 					}
 					
-					$sql = "INSERT INTO purchase
-									(ma_id,date,price,subtotal,currency,unit,quantity,code)
+					$sql = "INSERT INTO purchase_detailed
+									(name,date,unit_price,amount,currency,unit,quantity,code)
 							VALUES 	(?,NOW(),?,?,?,?,?,?)
 							";
 					$bind = array(
@@ -288,6 +299,31 @@
 					return $output['affected_rows'] =$affected_rows ;
 				}
 				
+				
+				$sql = "INSERT INTO purchase	
+								(khr,usd,code,pay_amount_usd,pay_amount_khr)
+						VALUES 	(?,?,?,?,?)";
+				$bind = array(
+					$ary['khr_total'],
+					$ary['usd_total'],
+					$row['code'],
+					$ary['pay_amount_usd'],
+					$ary['pay_amount_khr']
+				);
+			
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
 				
 				$sql = "INSERT INTO account	
 								(type,khr,usd,code)

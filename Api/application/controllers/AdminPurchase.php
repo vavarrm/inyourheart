@@ -112,6 +112,7 @@ class AdminPurchase extends CI_Controller
             $output['message'] = $parames['message'];
             $output['status'] = $parames['status'];
             $this->myLog->error_log($parames);
+				$back = -1;
 			
         }
         $this->myfunc->back($back,$output['message']);

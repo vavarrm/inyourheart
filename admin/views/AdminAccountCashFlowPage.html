@@ -1,0 +1,52 @@
+<style>
+	.add-text {
+		color: blue;
+	}
+	.less-text {
+		color: red;
+	}
+</style>
+<div class="row" ng-init="editFormInit('cashFlow');">
+	<div class="container">
+		<div class="x_panel" >
+			<div class="x_title">
+				<h2>Cash Flow</h2>
+				<ul class="nav navbar-right panel_toolbox">
+					<li><a class="collapse-link" ng-click="back();"><i class="fa fa-arrow-left"></i></a></li>
+					<li><a class="close-link" ng-click="tableClose();"><i class="fa fa-close"></i></a></li>
+				</ul>
+				<div class="clearfix"></div>
+			</div>
+			<div class="x_content" style="text-align: right!important;">
+				<div class="row">
+					<div  class="col-md-12">
+						<table class="table table-bordered"">
+						  <thead class="thead-dark">
+							<tr>
+							  <th scope="col" class="text-center">Type</th>
+							  <th scope="col" class="text-center">usd</th>
+							  <th scope="col" class="text-center">khr</th>
+							  <th scope="col" class="text-center">subtotal</th>
+							</tr>
+						  </thead>
+						  <tbody>
+							<tr ng-repeat="row in data.form.info.list"  ng-class="row.operator == '+' ? 'add-text':'less-text'">
+							  <td scope="row" ng-bind="row.type"></td>
+							  <td scope="row" ng-bind="row.usd"></td>
+							  <td scope="row" ng-bind="row.khr"></td>
+							  <td scope="row" ng-bind="'usd : '+row.total_usd+' khr : ' + row.total_khr"></td>
+							</tr>
+							<tr>
+								<td colspan="3">Total</td>
+								<td>usd : {{data.form.info.info.total_usd}}khr：{{data.form.info.info.total_khr}} 
+								</td>
+							</tr>
+						  </tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+	  </div>
+	</div>
+</div>
+

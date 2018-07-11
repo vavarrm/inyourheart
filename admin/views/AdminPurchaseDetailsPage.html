@@ -22,8 +22,8 @@
 						<tr ng-repeat="row in data.form_row.details| filter as filterAry" repeat-finish="renderFinish()" >
 							<td class="text-left" ng-bind="row.full_name"></td>
 							<td class="text-left" ng-bind="row.quantity +' ' +row.unit"></td>
-							<td class="text-left" ng-bind="row.currency +' ' +row.price"></td>
-							<td class="text-left" ng-bind="row.currency +' ' +row.subtotal"></td>
+							<td class="text-left" ng-bind="row.currency +' ' +row.unit_price"></td>
+							<td class="text-left" ng-bind="row.currency +' ' +row.amount"></td>
 						</tr>{{sumTotal(data.row.subtotal,data.row.currency)}}
 						<tr class="warning"  >
 							<td  class="text-danger" style=" vertical-align: middle;">

@@ -7,5 +7,6 @@
 	$lang['005'] = "account does not exist";
 	$lang['006'] = "account is lock";
 	$lang['007'] = "password error";
-	$lang['008'] = "Not allowed";
+	$lang['008'] = "Please Keyin Pay Amount";
+	$lang['009'] = "subtotal,  quantity lose zero";
 ?>

@@ -276,6 +276,15 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 		$scope.data.tableTr.push({});
 	}
 	
+	$scope.changeAmount = function(unit_price, quantity, index)
+	{
+		var amount = unit_price *  quantity;
+		if(amount>0)
+		{
+			$scope.data.row.subtotal[index] = amount;
+		}
+	}		
+	
 	$scope.sumTotal = function(subtotal,currency)
 	{
 		var total = {
@@ -283,14 +292,16 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 			khr:0,
 		};
 
+		// console.log(subtotal);
+		
         angular.forEach(subtotal, function(value,key)
 		{
 			value = value || 0;
 			total[$scope.data.row.currency[key]]+=value;
         });
 
-		total.usd = total.usd.toFixed(2);
-		total.khr = total.khr.toFixed(2);
+		total.usd = parseInt(total.usd).toFixed(2);
+		total.khr = parseInt(total.khr).toFixed(0);
 
 		$scope.data.sumTotal = total
 	}
@@ -404,11 +415,12 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 	
 	$scope.changePurchaseItem = function(id)
 	{
+		var ary = id.split("|&&|");
 		if(id == 'null')
 		{
 			return  null;
 		}
-		return  $scope.data.form_row.itemList[id].unit;
+		return  $scope.data.form_row.itemList[ary[0]].unit;
 	}
 	
 	$scope.editFormInit = function(func)
@@ -828,7 +840,7 @@ var loginCtrl = function($scope, $cookies, apiService)
 				if(r.data.status =="200")
 				{
 					$scope.sess = r.data.body.sess;
-					$cookies.put('admin_sess', $scope.sess, { path: '/' ,expires:new Date(new Date().getTime()+6000*60*2)});
+					$cookies.put('admin_sess', $scope.sess, { path: '/' ,expires:new Date(new Date().getTime()+6000*60*12)});
 					var obj =
 					{
 						'message':'welcome',

@@ -159,5 +159,83 @@
                 throw $e;
             }
         }
+		
+		public function getcashFlow()
+		{
+			try
+            {
+				$status = '000';
+				$khrtousd= $this->ci->config->item('khrtousd');
+				$sql ="	SELECT
+							`type`,
+							SUM(`khr`) AS khr,
+							SUM(`usd`) AS usd,
+							ROUND(SUM(`khr`/%d+`usd`),2) AS  total_usd ,
+							ROUND(SUM(`khr`+`usd`*%d)) AS  total_khr,
+							operator
+						 FROM `account` 
+						 WHERE is_del ='false'
+						 GROUP BY `type`";
+						 
+
+				$sql = sprintf($sql,$khrtousd,$khrtousd);
+				$query = $this->db->query($sql);
+				
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$rows = $query->result_array();
+				$output['list'] = $rows;
+				$query->free_result();
+				
+				
+				$sql="	SELECT ROUND((t.khr/4000 + t.usd),2)  total_usd , ROUND((t.khr + t.usd*4000)) AS total_khr FROM (SELECT 
+							SUM(CASE `operator` 
+								WHEN '+' THEN `khr`
+								WHEN '-' THEN `khr`*-1
+							END) AS khr,
+							SUM(CASE `operator` 
+								WHEN '+' THEN `usd`
+								WHEN '-' THEN `usd`*-1
+							END) AS usd
+						FROM account
+						 WHERE is_del ='false'
+						) AS t";
+				
+				$sql = sprintf($sql,$khrtousd,$khrtousd);
+				$query = $this->db->query($sql);
+				
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$row = $query->row_array();
+				$output['info'] = $row;
+				$query->free_result();
+				
+				return $output;
+			}catch(MyException $e)
+            {
+                throw $e;
+            }
+		}
+
 	}
 ?>

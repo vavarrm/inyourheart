@@ -1,4 +1,4 @@
-<div class="row" ng-init="editFormInit('addFormPage')" >
+<div class="row" ng-init="editFormInit('editFormPage')" >
 	<div class="container">
 		<div class="x_panel" >
 			<div class="x_title">
@@ -16,7 +16,7 @@
 							<label>zh name</label>
 						</div>
 						<div class="col-sm-4">
-							<input type="text"  maxlength="25" name="zh_name"  class="form-control" >
+							<input type="text"  maxlength="25" name="zh_name"  value="{{data.form.info.zh_name}}" class="form-control" >
 						</div>
 					</div>
 					<div class="form-group" >
@@ -24,7 +24,7 @@
 							<label>en name</label>
 						</div>
 						<div class="col-sm-4">
-							<input type="text" maxlength="50" name="en_name"  class="form-control">
+							<input type="text" maxlength="50" name="en_name"   value="{{data.form.info.en_name}}" class="form-control">
 						</div>
 					</div>
 					<div class="form-group" >
@@ -32,7 +32,7 @@
 							<label>kh name</label>
 						</div>
 						<div class="col-sm-4">
-							<input type="text" maxlength="200" name="kh_name"    class="form-control">
+							<input type="text" maxlength="200" name="kh_name"  value="{{data.form.info.kh_name}}"   class="form-control">
 						</div>
 					</div>
 					<div class="form-group" >
@@ -40,21 +40,22 @@
 							<label>unit price</label>
 						</div>
 						<div class="col-sm-4">
-							<input type="number" required="required"  min="0" step="0.01" maxlength="200" name="unit_price"   class="form-control">
+							<input type="number" required="required"  min="0" step="0.01" maxlength="200" name="unit_price"  value="{{data.form.info.unit_price}}"   class="form-control">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class=" col-sm-1 " >size</label>
+						<label class=" col-sm-1 " >category</label>
 						<div class="col-sm-4">
-							<select name="category" class="form-control col-md-7 col-xs-12" name="category">
+							<select name="category" class="form-control col-md-7 col-xs-12" name="category" ng-model="data.form.info.ca_id" >
 								<option value="">please select</option>
-								<option value="{{option.id}}" ng-repeat="option in data.form_row.itemList" ng-bind="option.full_name"></option>
+								<option value="{{option.id}}" ng-repeat="option in data.form.info.itemList" ng-bind="option.full_name"></option>
 							</select>
 						</div>
 					</div>
 					<div class="ln_solid"></div>
 					<div class="form-group">
 						<div class="col-sm-2" >
+							<input type="hidden" name="id" value="{{data.form_row.id}}">
 							<input type="submit" class="btn btn-success" value="Submit">
 						</div>
 					</div>

@@ -1,5 +1,5 @@
 <?php
-	class Menu_Model extends CI_Model 
+	class Category_Model extends CI_Model 
 	{
 		function __construct()
 		{
@@ -36,22 +36,19 @@
                     throw $MyException;
                 }
 				
-				$sql = "INSERT INTO  menu (zh_name, en_name, kh_name,unit_price,ca_id)
-						VALUES (?,?,?,?,?)";
+				$sql = "INSERT INTO  category (zh_name, en_name, kh_name)
+						VALUES (?,?,?)";
 				
 				$bind = array(
 					$ary['zh_name'],
 					$ary['en_name'],
-					$ary['kh_name'],
-					$ary['unit_price'],
-					$ary['category'],
+					$ary['kh_name']
 				);
 				
 				$query = $this->db->query($sql, $bind);
 				$error = $this->db->error();
 				if($error['message'] !="")
 				{
-					$status = '000';
 					$MyException = new MyException();
 					$array = array(
 						'el_system_error' 	=>$error['message'] ,
@@ -84,14 +81,12 @@
                     throw $MyException;
                 }
 				
-				$sql = "UPDATE   menu  SET zh_name =?, en_name=?,kh_name=?,unit_price=?,ca_id=? WHERE id = ?";
+				$sql = "UPDATE   category  SET zh_name =?, en_name=?,kh_name=? WHERE id = ?";
 				
 				$bind = array(
 					$ary['zh_name'],
 					$ary['en_name'],
 					$ary['kh_name'],
-					$ary['unit_price'],
-					$ary['category'],
 					$ary['id'],
 				);
 				
@@ -135,7 +130,7 @@
                     throw $MyException;
                 }
 				
-				$sql = "SELECT * FROM  menu WHERE id = ?";
+				$sql = "SELECT * FROM  category WHERE id = ?";
 				$bind = array(
 					$id
 				);
@@ -180,7 +175,7 @@
                     throw $MyException;
                 }
 				
-				$sql = "DELETE FROM  menu WHERE id = ?";
+				$sql = "DELETE FROM category WHERE id = ?";
 				
 				$bind = array(
 					$id
@@ -239,7 +234,7 @@
 
                 $sql ="	SELECT "
                     . $fields.
-                    " FROM menu AS t LEFT JOIN category AS ca ON t.ca_id = ca.id";
+                    " FROM category AS t ";
 
                 $ary['sql'] =$sql;
                 $output = $this->getListFromat($ary);
@@ -250,6 +245,38 @@
                 throw $e;
             }
         }
+		
+		public function getOptionList()
+		{
+			try
+            {
+				$sql = "SELECT *,concat(kh_name,' ',en_name,' ',zh_name) AS full_name	 FROM  category ";
+				$bind = array(
+					$id
+				);
+				$query = $this->db->query($sql,$bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>'000'
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				
+				$rows = $query->result_array();
+			
+				$query->free_result();
+				return $rows;
+            }catch(MyException $e)
+            {
+                throw $e;
+            }
+		}
 		
 		
 		

@@ -6,13 +6,12 @@
  * Time: 12:38 PM
  */
 
-class AdminMenu extends CI_Controller
+class AdminCategory extends CI_Controller
 {
     private $request = array();
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Menu_Model', 'menu');
         $this->load->model('Category_Model', 'category');
         $this->response_code = $this->language->load('admin_response');
         $this->request = json_decode(trim(file_get_contents('php://input'), 'r'), true);
@@ -61,8 +60,6 @@ class AdminMenu extends CI_Controller
 				'action'	=> '/Api/'.__CLASS__.'/doAdd',
 				'pe_id'		=>$this->get['pe_id']
 			);
-			
-			$itemList = $this->category->getOptionList();
 			$output['body']['row']['info'] = array(
 				'itemList'	=> $itemList
 			);
@@ -98,15 +95,12 @@ class AdminMenu extends CI_Controller
 				$MyException->setParams($array);
 				throw $MyException;
 			}
-			// var_dump($this->request);
-			$row = $this->menu->getRowByID($id);
-			$itemList = $this->category->getOptionList();
+			$row = $this->category->getRowByID($id);
 			$output['body']['row']['form'] = array(
 				'action'	=> '/Api/'.__CLASS__.'/doEdit',
 				'pe_id'		=>$this->get['pe_id']
 			);
 			$output['body']['row']['info'] = $row;
-			$output['body']['row']['info']['itemList'] = $itemList;
 		}catch(MyException $e)
 		{
 			$parames = $e->getParams();
@@ -125,8 +119,8 @@ class AdminMenu extends CI_Controller
     {
         $output['body']=array();
         $output['status'] = '200';
-        $output['title'] ='Add Menu ';
-        $output['message'] ='Add Menu Ok';
+        $output['title'] ='Add  category ';
+        $output['message'] ='Add category Ok';
         $back =-2;
         try
         {
@@ -135,10 +129,8 @@ class AdminMenu extends CI_Controller
 			$zh_name= (isset($this->post['zh_name']))?$this->post['zh_name']:'';
 			$en_name= (isset($this->post['en_name']))?$this->post['en_name']:'';
 			$kh_name= (isset($this->post['kh_name']))?$this->post['kh_name']:'';
-			$unit_price= (isset($this->post['unit_price']))?$this->post['unit_price']:'';
-			$category= (isset($this->post['category']))?$this->post['category']:'';
-			
-			if(($zh_name=="" && $en_name=="" && $kh_name=="" ) || $unit_price =="" || $category =="")
+		
+			if(($zh_name=="" && $en_name=="" && $kh_name=="" ))
 			{
 				$array = array(
 					'status'	=>'002'
@@ -148,7 +140,7 @@ class AdminMenu extends CI_Controller
 				throw $MyException;
 			}
 			
-			$this->menu->add($this->post);
+			$this->category->add($this->post);
 		   
         }catch(MyException $e)
         {
@@ -156,12 +148,11 @@ class AdminMenu extends CI_Controller
             $parames['class'] = __CLASS__;
             $parames['function'] = __function__;
             $parames['message'] =  $this->response_code[$parames['status']];
-			echo "D";
             $output['message'] = $parames['message'];
             $output['status'] = $parames['status'];
             $this->myLog->error_log($parames);
 			$back =-1;
-			
+			// echo "D";
         }
         $this->myfunc->back($back,$output['message']);
 
@@ -171,8 +162,8 @@ class AdminMenu extends CI_Controller
     {
         $output['body']=array();
         $output['status'] = '200';
-        $output['title'] ='Edit Menu ';
-        $output['message'] ='Edit Menu  OK';
+        $output['title'] ='Edit category ';
+        $output['message'] ='Edit category  OK';
         $back =-2;
         try
         {
@@ -181,9 +172,8 @@ class AdminMenu extends CI_Controller
 			$en_name= (isset($this->post['en_name']))?$this->post['en_name']:'';
 			$kh_name= (isset($this->post['kh_name']))?$this->post['kh_name']:'';
 			$id= (isset($this->post['id']))?$this->post['id']:'';
-			$unit_price= (isset($this->post['unit_price']))?$this->post['unit_price']:'';
-			$category= (isset($this->post['category']))?$this->post['category']:'';
-			if(($zh_name=="" && $en_name=="" && $kh_name=="" ) || $unit_price =="" || $id="" || $category=="")
+			$unit= (isset($this->post['unit']))?$this->post['unit']:'';
+			if(($zh_name=="" && $en_name=="" && $kh_name=="" )  || $id="")
 			{
 				$array = array(
 					'status'	=>'002'
@@ -193,7 +183,7 @@ class AdminMenu extends CI_Controller
 				throw $MyException;
 			}
 			
-			$row = $this->menu->edit($this->post);
+			$row = $this->category->edit($this->post);
 			
 			if($row ['affected_rows'] == 0)
 			{
@@ -240,7 +230,7 @@ class AdminMenu extends CI_Controller
 				$MyException->setParams($array);
 				throw $MyException;
 			}
-			$data = $this->menu->del($id);
+			$data = $this->category->del($id);
 			if($data['affected_rows'] ==0)
 			{
 				$array = array(
@@ -323,15 +313,13 @@ class AdminMenu extends CI_Controller
 			
             $ary['fields'] = array(
                 'id'				 	  		=>array('field'=>'t.id AS id','AS' =>'id','hide'	=>true),
-                'category'						=>array('field'=>"concat(ca.kh_name,' ',ca.en_name,' ',ca.zh_name) AS category",'AS' =>'category'),
                 'full_name'						=>array('field'=>"concat(t.kh_name,' ',t.en_name,' ',t.zh_name) AS full_name",'AS' =>'full_name'),
-				'unit_price'				 	  		=>array('field'=>"concat('USD ：  ', t.unit_price) AS unit_price",'AS' =>'unit_price'),
             );
 			
 			
 		
 			
-            $list = $this->menu->getList($ary);
+            $list = $this->category->getList($ary);
 			
             $output['body'] = $list;
             $output['body']['fields'] = $ary['fields'] ;

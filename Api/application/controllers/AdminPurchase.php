@@ -97,6 +97,7 @@ class AdminPurchase extends CI_Controller
         try
         {
 			$output['message'] = 'Add ok';
+			// var_dump($this->post);
             $row = $this->purchase->add($this->post,$this->admin);
 			if( $row ['affected_rows'] == 0)
 			{
@@ -205,6 +206,7 @@ class AdminPurchase extends CI_Controller
             $form['dateSearchControl'] = true;
 			$datetime_start = (isset($this->request['datetime_start']))?$this->request['datetime_start']:'';
 			$datetime_end = (isset($this->request['datetime_end']))?$this->request['datetime_end']:'';
+			// var_dump($this->request);
 			if($datetime_start !="")
 			{
 				$datetime_start = date('Y-m-d' ,strtotime($datetime_start));
@@ -231,6 +233,7 @@ class AdminPurchase extends CI_Controller
 				'format'	=>'%Y-%m-%d',
 				'operator'	=>'<=',
 			);
+
 			
             $form['table_add'] = __CLASS__."/add/".__CLASS__.'Add/';
             $form['table_del'] = "del";
@@ -248,27 +251,25 @@ class AdminPurchase extends CI_Controller
 			
             $ary['fields'] = array(
                 'id'				    	=>array('field'=>'t.code AS id','AS' =>'id','hide'=>true),
+				'date'				   		=>array('field'=>"DATE_FORMAT(t.add_datetime,'%Y-%m-%d' ) AS date",'AS' =>'date'),
                 'code'				    	=>array('field'=>'t.code AS code','AS' =>'code'),
                 'khr'				    	=>array('field'=>'t.khr AS khr','AS' =>'khr'),
-                'usd'				   		=>array('field'=>'t.usd AS usd','AS' =>'usd'),
-                'date'				   		=>array('field'=>"DATE_FORMAT(add_datetime,'%Y-%m-%d' ) AS date",'AS' =>'date'),
-                'subtotal'				    =>array('field'=>sprintf(" CONCAT('$',ROUND((t.usd + (t.khr/%1\$d)),2),'  ,  KHR  ', ROUND((t.khr + (t.usd*%1\$d)))) AS subtotal", $this->config->item('khrtousd')),'AS' =>'subtotal'),
+                'usd'				   		=>array('field'=>'usd AS usd','AS' =>'usd'),
+                'pay_amount'				=>array('field'=>"CONCAT('USD：',t.pay_amount_usd,',',' KHR：',t.pay_amount_khr) AS pay_amount",'AS' =>'pay_amount'),
+                'subtotal'				    =>array('field'=>sprintf(" CONCAT('USD：',ROUND((t.usd + (t.khr/%1\$d)),2),'  ,  KHR：', ROUND((t.khr + (t.usd*%1\$d)))) AS subtotal", $this->config->item('khrtousd')),'AS' =>'subtotal'),
+                'change'				    =>array('field'=>sprintf(" CONCAT('$',ROUND((t.pay_amount_usd + (t.pay_amount_khr/%1\$d)),2) - ROUND((t.usd + (t.khr/%1\$d)),2) ,'  ,  KHR  ', ROUND((t.pay_amount_khr + (t.pay_amount_usd*%1\$d))) - ROUND((t.khr + (t.usd*%1\$d))) ) AS `change`", $this->config->item('khrtousd')),'AS' =>'change'),     
             );
 			
 			
-			$ary['t.type'] = array(
-				'value' =>'purchase',
-				'logic' =>'AND',
-				'operator' =>'=',
-			);
+		
 			
 			$ary['t.is_del'] = array(
 				'value' =>'false',
 				'logic' =>'AND',
 				'operator' =>'=',
 			);
-			
-            $list = $this->account->getList($ary);
+			// echo "D";
+            $list = $this->purchase->getList($ary);
 			
             $output['body'] = $list;
             $output['body']['fields'] = $ary['fields'] ;

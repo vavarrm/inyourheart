@@ -133,9 +133,10 @@
 			
 			$sql ="	SELECT 
 						pd.*,
-						pd.name AS full_name	
+						concat(ma.kh_name,' ',ma.en_name,' ',ma.zh_name) AS full_name	
 					FROM 
 							purchase_detailed  AS  pd
+								LEFT JOIN material AS ma ON pd.ma_id = ma.id
 					WHERE pd.code =?";
 			$bind= array(
 				$code
@@ -267,15 +268,14 @@
 					$temp_ary = explode("|&&|",$value);
 					
 					$sql = "INSERT INTO purchase_detailed
-									(name,date,unit_price,amount,currency,unit,quantity,code)
-							VALUES 	(?,NOW(),?,?,?,?,?,?)
+									(ma_id,date,unit_price,amount,currency,quantity,code)
+							VALUES 	(?,NOW(),?,?,?,?,?)
 							";
 					$bind = array(
-						$temp_ary[1],
+						$temp_ary[0],
 						$ary['price'][$key],
 						$ary['subtotal'][$key],
 						$ary['currency'][$key],
-						$ary['unit'][$key],
 						$ary['quantity'][$key],
 						$row['code']
 					);
@@ -283,6 +283,7 @@
 					$error = $this->db->error();
 					if($error['message'] !="")
 					{
+						$status ='000';
 						$MyException = new MyException();
 						$array = array(
 							'el_system_error' 	=>$error['message'] ,
@@ -402,8 +403,8 @@
 					"
                     . $fields.
                     " FROM purchase AS t ";
-				$sql  = sprintf($sql,$this->khrtousd);
                 $ary['sql'] =$sql;
+				// echo $sql;
                 $output = $this->getListFromat($ary);
 
                 return 	$output  ;

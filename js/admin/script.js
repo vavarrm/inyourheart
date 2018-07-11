@@ -300,8 +300,8 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 			total[$scope.data.row.currency[key]]+=value;
         });
 
-		total.usd = parseInt(total.usd).toFixed(2);
-		total.khr = parseInt(total.khr).toFixed(0);
+		total.usd = Number(total.usd).toFixed(2);
+		total.khr = Number(total.khr).toFixed(0);
 
 		$scope.data.sumTotal = total
 	}

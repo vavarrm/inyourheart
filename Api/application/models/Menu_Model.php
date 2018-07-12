@@ -212,6 +212,59 @@
 		}
 		
 
+		public function getMenuIndexByCategory()
+		{
+			$status='100';
+			$sql = "SELECT id,  concat(kh_name,' ',en_name,' ',zh_name) AS full_name FROM category ORDER BY id";
+			$query = $this->db->query($sql);
+			$error = $this->db->error();
+			if($error['message'] !="")
+			{
+				$MyException = new MyException();
+				$array = array(
+					'el_system_error' 	=>$error['message'] ,
+					'status'	=>$status
+				);
+				
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
+			$rows= $query->result_array();
+			if(!empty($rows))
+			{
+				foreach($rows as $row)
+				{
+					$sql = "SELECT id ,unit_price,  concat(kh_name,' ',en_name,' ',zh_name) AS full_name ,md5('menuimg'+id) AS img FROM 	menu WHERE ca_id  = ? AND status ='sale_on'"; 
+					
+					$bind = array(
+						$row['id']
+					);
+					$query = $this->db->query($sql,$bind);
+					$error = $this->db->error();
+					if($error['message'] !="")
+					{
+						$status='000';
+						$MyException = new MyException();
+						$array = array(
+							'el_system_error' 	=>$error['message'] ,
+							'status'	=>$status
+						);
+						
+						$MyException->setParams($array);
+						throw $MyException;
+					}
+					$menus= $query->result_array();
+					$output['menu'][$row['id']]= array(
+						'list'	=>$menus
+					);
+				}
+			}
+			$output['category'] = $rows;
+			$query->free_result();
+			return $output;
+			// var_dump($output);
+		}
 		
 		public function getList($ary)
         {

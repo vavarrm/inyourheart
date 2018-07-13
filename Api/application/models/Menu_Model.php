@@ -159,6 +159,7 @@
 					$config['max_size']	= '1024';
 					$config['max_width']  = '250';
 					$config['max_height']  = '167';
+					$config['overwrite']  = true;
 					if (!file_exists($config['upload_path'])) 
 					{
 						mkdir($config['upload_path'], 0777, true);

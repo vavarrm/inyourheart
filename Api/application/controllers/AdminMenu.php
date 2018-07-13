@@ -163,7 +163,7 @@ class AdminMenu extends CI_Controller
 			$back =-1;
 			
         }
-        $this->myfunc->back($back,$output['message']);
+        // $this->myfunc->back($back,$output['message']);
 
     }
 	

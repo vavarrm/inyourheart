@@ -1,10 +1,12 @@
 <?php
 	class Menu_Model extends CI_Model 
 	{
+		private $ci;
 		function __construct()
 		{
 			
 			parent::__construct();
+			$this->ci =& get_instance();
 			$this->load->database();
 			$query = $this->db->query("set time_zone = '+7:00'");
 			$error = $this->db->error();
@@ -61,7 +63,42 @@
 					$MyException->setParams($array);
 					throw $MyException;
 				}
-			
+				
+				
+				
+				if($_FILES['img']['error'] == 0)
+				{
+					$insert_id = $this->db->insert_id();
+					$config['file_name']  = md5('menuimg'.$insert_id);
+					$config['upload_path'] = BASEPATH.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'menu'.DIRECTORY_SEPARATOR;
+
+					$config['allowed_types'] = 'jpg';
+					$config['max_size']	= '1024';
+					$config['max_width']  = '250';
+					$config['max_height']  = '167';
+					if (!file_exists($config['upload_path'])) 
+					{
+						mkdir($config['upload_path'], 0777, true);
+					}
+					
+
+					$this->ci->load->library('upload',$config);
+					
+					if ( ! $this->upload->do_upload('img'))
+					{
+						
+						$status = '000';
+						$MyException = new MyException();
+						$array = array(
+							'el_system_error' 	=>$this->upload->display_errors() ,
+							'status'	=>$status
+						);
+						
+						$MyException->setParams($array);
+						throw $MyException;
+
+					}																	
+				}
 			}
 			catch(MyException $e)
 			{
@@ -109,7 +146,45 @@
 					throw $MyException;
 				}
 				
-				$affected_rows = $this->db->affected_rows();
+				
+				
+				if($_FILES['img']['error'] == 0)
+				{
+					
+					$insert_id = $ary['id'];
+					$config['file_name']  = md5('menuimg'.$insert_id);
+					$config['upload_path'] = BASEPATH.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'menu'.DIRECTORY_SEPARATOR;
+
+					$config['allowed_types'] = 'jpg';
+					$config['max_size']	= '1024';
+					$config['max_width']  = '250';
+					$config['max_height']  = '167';
+					if (!file_exists($config['upload_path'])) 
+					{
+						mkdir($config['upload_path'], 0777, true);
+					}
+					
+
+					$this->ci->load->library('upload',$config);
+					
+					if ( ! $this->upload->do_upload('img'))
+					{
+						
+						$status = '009';
+						$MyException = new MyException();
+						$array = array(
+							'el_system_error' 	=>$this->upload->display_errors() ,
+							'status'	=>$status
+						);
+						$MyException->setParams($array);
+						throw $MyException;
+
+					}	
+					
+					$affected_rows++;
+				}
+				
+				$affected_rows += $this->db->affected_rows();
 				$output['affected_rows'] =$affected_rows ;
 				return $output;
 			
@@ -135,7 +210,7 @@
                     throw $MyException;
                 }
 				
-				$sql = "SELECT * FROM  menu WHERE id = ?";
+				$sql = "SELECT * ,md5(concat('menuimg',id)) AS img FROM  menu WHERE id = ?";
 				$bind = array(
 					$id
 				);
@@ -235,7 +310,7 @@
 			{
 				foreach($rows as $row)
 				{
-					$sql = "SELECT id ,unit_price,  concat(kh_name,' ',en_name,' ',zh_name) AS full_name ,md5('menuimg'+id) AS img FROM 	menu WHERE ca_id  = ? AND status ='sale_on'"; 
+					$sql = "SELECT id ,unit_price,  concat(kh_name,' ',en_name,' ',zh_name) AS full_name ,md5(concat('menuimg',id)) AS img FROM 	menu WHERE ca_id  = ? AND status ='sale_on'"; 
 					
 					$bind = array(
 						$row['id']

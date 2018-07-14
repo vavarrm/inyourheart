@@ -265,7 +265,9 @@ class AdminMaterial extends CI_Controller
             $ary['limit'] = (isset($this->request['limit']))?$this->request['limit']:10;
             $ary['p'] = (isset($this->request['p']))?$this->request['p']:1;
             $form['inputSearchControl'] = array(
-
+				'zh_name'	=>'',
+				'en_name'	=>'',
+				'kh_name'	=>'',
             );
             if(!empty($form['inputSearchControl']))
             {
@@ -303,6 +305,23 @@ class AdminMaterial extends CI_Controller
             $form['table_edit'] =  __CLASS__."/edit/".__CLASS__.'editForm/';
 			
 			
+			$ary['zh_name'] = array(
+				'value'	=>$zh_name,
+				'operator'	=>'=',
+				'logic'		=>'AND',
+			);
+			
+			$ary['en_name'] = array(
+				'value'	=>$en_name,
+				'operator'	=>'=',
+				'logic'		=>'AND',
+			);
+			
+			$ary['kh_name'] = array(
+				'value'	=>$kh_name,
+				'operator'	=>'=',
+				'logic'		=>'AND',
+			);
 			
             $temp=array(
                 'pe_id' =>$this->get['pe_id'],

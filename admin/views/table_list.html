@@ -94,13 +94,6 @@
 						<label ng-if="data.table_form.dateSearchControl  && user_terminal =='cellPhone'" >
 							<input type="datetime-local"  ng-model="data.table_search.datetime_end"     class="form-control date_end input-sm"  >
 						</label>
-						<label ng-repeat="(key, value) in data.table_form.inputSearchControl">
-							<font style="vertical-align: inherit;">
-								<font style="vertical-align: inherit;" ng-bind="key+':'"></font>
-							</font>
-							<input type="search" ng-model="data.table_search[key]"  ng-enter="searchClick();"  class="form-control input-sm" placeholder="" >&nbsp;&nbsp;&nbsp;
-						</label>
-						
 						<label ng-repeat="(key, value) in data.table_form.selectSearchControl">
 							<font style="vertical-align: inherit;">
 								<font style="vertical-align: inherit;" ng-bind="key+':'"></font>

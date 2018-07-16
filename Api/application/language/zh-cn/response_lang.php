@@ -1,12 +1,12 @@
 <?php
 	$lang['000'] = "system error";
-	$lang['001'] = "請確認必填欄位";
-	$lang['002'] = "手機號碼已註冊";
-	$lang['003'] = "註冊失敗";
-	$lang['004'] = "系統發送簡訊忙祿中，請稍後在試";
-	$lang['005'] = "手機驗證碼送出失敗";
-	$lang['006'] = "無法取得使用者資料";
-	$lang['007'] = "此手機號發送驗證碼次數已達上限";
+	$lang['001'] = "request parameter error";
+	$lang['002'] = "the bill does not exist";
+	$lang['003'] = "the bill Checked out";
+	$lang['004'] = "discount Less than 0 OR Greater than 1";
+	$lang['005'] = "bill get total error";
+	$lang['006'] = "checkbill failure";
+	$lang['007'] = "pay amount Less Total";
 	$lang['008'] = "驗證碼錯誤";
 	$lang['009'] = "注册失败";
 	$lang['010'] = "密码为8~12为英文与数字组合";
@@ -18,5 +18,5 @@
 	$lang['016'] = "密碼錯誤";
 	$lang['017'] = "此IP未允許進入";
 	$lang['018'] = "the number Using";
-	$lang['100'] = "response success";;
+	$lang['200'] = "response success";;
 ?>

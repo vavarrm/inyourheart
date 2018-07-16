@@ -216,7 +216,7 @@
 					$MyException->setParams($array);
 					throw $MyException;
 				}
-				$status ='100';
+				$status ='200';
 				$output['status']=$status;
 				$this->db->trans_commit();
 				$output['affected_rows'] =$affected_rows ;
@@ -228,6 +228,76 @@
 				$this->db->trans_rollback();
                 throw $e;
             }
+		}
+		
+		public function getRowByCode($code)
+		{
+			if($code =="")
+			{
+				$MyException = new MyException();
+				$array = array(
+					'el_system_error' 	=>'no setParams' ,
+					'status'	=>$status
+				);
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			$sql = "SELECT * FROM sale WHERE code =?";
+			$bind=array($code);
+			$query = $this->db->query($sql,$bind);
+			$error = $this->db->error();
+			if($error['message'] !="")
+			{
+				$status ='000';
+				$MyException = new MyException();
+				$array = array(
+					'el_system_error' 	=>$error['message'] ,
+					'status'	=>$status
+				);
+				
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			$row = $query->row_array();
+			$query->free_result();
+			return $row;
+			
+		}
+		
+		public function getTotalByCode($code)
+		{
+			if($code =="")
+			{
+				$MyException = new MyException();
+				$array = array(
+					'el_system_error' 	=>'no setParams' ,
+					'status'	=>$status
+				);
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			$sql ="	SELECT 
+							SUM(amount) AS total 
+						FROM sale_detailed WHERE code =?";
+			$bind=array($code);
+			$query = $this->db->query($sql,$bind);
+			$error = $this->db->error();
+			if($error['message'] !="")
+			{
+				$status ='000';
+				$MyException = new MyException();
+				$array = array(
+					'el_system_error' 	=>$error['message'] ,
+					'status'	=>$status
+				);
+				
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			$row = $query->row_array();
+			$query->free_result();
+			return $row;
+			
 		}
 		
 		public function addMore($ary)
@@ -247,10 +317,32 @@
                     throw $MyException;
                 }
 				
+				$bill = $this->getRowByCode($ary['code']);
 				
+				if(empty($bill))
+				{
+					$status='002';
+					$MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'' ,
+                        'status'	=>$status
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+				}
 				
-				
-				
+				if($bill['status'] == 'checkout')
+				{
+					$status='003';
+					$MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'' ,
+                        'status'	=>$status
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+				}
+			
 				foreach($ary['meals'] as  $key => $value)
 				{	
 					if($value['me_id'] == '')
@@ -312,14 +404,199 @@
 					return $output['affected_rows'] =$affected_rows ;
 				}
 				
-				$status ='100';
+				$status ='200';
 				$output['status']=$status;
 				$this->db->trans_commit();
 				$output['affected_rows'] =$affected_rows ;
-				$output['code'] = $row['code'];
+				$output['code'] = $ary['code'];
 				return $output;
 				
 			}catch(MyException $e)
+            {
+				$this->db->trans_rollback();
+                throw $e;
+            }
+		}
+		
+		public function checkBill($ary)
+		{
+			try
+            {
+			
+				$status='000';
+				$this->db->trans_begin();
+				if(empty($ary))
+                {
+                    $MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'no setParams' ,
+                        'status'	=>$status
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+                }
+				
+				$bill = $this->getRowByCode($ary['code']);
+				
+				if(empty($bill))
+				{
+					$status='002';
+					$MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'' ,
+                        'status'	=>$status
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+				}
+				
+				if($bill['status'] == 'checkout')
+				{
+					$status='003';
+					$MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'' ,
+                        'status'	=>$status
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+				}
+				
+				if($ary['discount'] <= 0  || $ary['discount'] >1)
+				{
+					$status='004';
+					$MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'' ,
+                        'status'	=>$status
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+				}
+				
+				
+				$data = $this->getTotalByCode($ary['code']);
+				
+				if($ary['pay_amount'] < $data['total'])
+				{
+					$status='007';
+					$MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'' ,
+                        'status'	=>$status
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+				}
+				
+				
+				if(empty($data) || $data['total'] <=0)
+				{
+					$status='005';
+					$MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'' ,
+                        'status'	=>$status
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+				}
+				
+				$sql ="	UPDATE 
+							sale 
+						SET 
+							original_total	 =? , 
+							discount=? , 
+							pay_amount =?
+						WHERE code=?";
+				$bind =array(
+					$data['total'],
+					$ary['discount'],
+					$ary['pay_amount'],
+					$ary['code'],
+				);
+				
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$status ='000';
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				
+				$affected_rows += $this->db->affected_rows();
+				
+				if($affected_rows ==0)
+				{
+					$status ='006';
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				
+				
+				$sql ="	UPDATE 
+							sale 
+						SET 
+							total	 =discount *original_total , 
+							pay_change	 =pay_amount-(discount *original_total) , 
+							status='checkout' 
+						WHERE code=?";
+				$bind =array(
+					$ary['code'],
+				);
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$status ='000';
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				
+				$affected_rows += $this->db->affected_rows();
+				
+				
+				if($affected_rows ==0)
+				{
+					$status ='006';
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				
+				$status ='200';
+				$output['status']=$status;
+				$this->db->trans_commit();
+				$output['affected_rows'] =$affected_rows ;
+				$output['code'] = $ary['code'];
+				return $output;
+				
+			}
+			catch(MyException $e)
             {
 				$this->db->trans_rollback();
                 throw $e;

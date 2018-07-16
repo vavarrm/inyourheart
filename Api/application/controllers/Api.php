@@ -87,12 +87,64 @@ class Api extends CI_Controller {
 	public function addOrder()
 	{
 		$output['body']=array();
-		$output['status'] = '100';
-		$output['title'] ='add Order';
+		$output['status'] = '200';
+		$output['title'] ='add more';
 		try 
 		{	
+			if(
+				$this->request['number'] =="" ||
+				$this->request['delivery'] =="" ||
+				$this->request['meals'] =="" 
+			)
+			{
+				$array = array(
+					'status'	=>'002'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
 			
 			$data = $this->order->add($this->request);
+			$output['message']['body']['data'] = $data;
+			
+			
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['status'] = $parames['status']; 
+			$output['message'] = $parames['message']; 
+			$this->myLog->error_log($parames);
+		}
+		
+		$this->myfunc->response($output);
+	}
+	
+	public function checkBill()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['title'] ='checkBill';
+		try 
+		{	
+			if(
+				$this->request['code'] =="" 
+			)
+			{
+				$array = array(
+					'status'	=>'002'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
+			
+			$data = $this->order->checkBill($this->request);
 			$output['message']['body']['data'] = $data;
 			
 			
@@ -117,6 +169,19 @@ class Api extends CI_Controller {
 		$output['title'] ='add More By Order';
 		try 
 		{
+			if(
+				$this->request['code'] =="" ||
+				$this->request['meals'] =="" 
+			)
+			{
+				$array = array(
+					'status'	=>'001'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
 			$data = $this->order->addMore($this->request);
 			$output['message']['body']['data'] = $data;
 			

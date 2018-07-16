@@ -214,7 +214,7 @@
 
 		public function getMenuIndexByCategory()
 		{
-			$status='100';
+			$status='000';
 			$sql = "SELECT id,  concat(kh_name,' ',en_name,' ',zh_name) AS full_name FROM category ORDER BY id";
 			$query = $this->db->query($sql);
 			$error = $this->db->error();

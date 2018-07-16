@@ -9,4 +9,5 @@
 	$lang['007'] = "password error";
 	$lang['008'] = "Please Keyin Pay Amount";
 	$lang['009'] = "subtotal,  quantity lose zero";
+	$lang['010'] = "upload file failure";
 ?>

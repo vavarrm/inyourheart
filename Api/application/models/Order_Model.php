@@ -230,6 +230,81 @@
             }
 		}
 		
+		public function delMeals($ary)
+		{
+			try
+            {
+				$status='000';
+				$this->db->trans_begin();
+				if(empty($ary))
+                {
+                    $MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'no setParams' ,
+                        'status'	=>$status
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+                }
+				
+				$bill = $this->getRowByCode($ary['code']);
+				if(empty($bill))
+				{
+					$status='002';
+					$MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'' ,
+                        'status'	=>$status
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+				}
+				
+				if(!empty($ary['meals']))
+				{
+					foreach($ary['meals'] as $value)
+					{
+						if($value['id'] =="")
+						{
+							continue;
+						}
+						$sql = "UPDATE sale_detailed SET is_del = 'true' WHERE code=? AND  id=?";
+						$bind = array(
+							$ary['code'],
+							$value['id'],
+						);
+						$query = $this->db->query($sql, $bind);
+						$error = $this->db->error();
+						if($error['message'] !="")
+						{
+							$MyException = new MyException();
+							$array = array(
+								'el_system_error' 	=>$error['message'] ,
+								'status'	=>$status
+							);
+							
+							$MyException->setParams($array);
+							throw $MyException;
+						}
+						$affected_rows += $this->db->affected_rows();
+					}
+				}
+				
+				
+				$status ='200';
+				$output['status']=$status;
+				$this->db->trans_commit();
+				$output['affected_rows'] =$affected_rows ;
+				$output['code'] = $ary['code'];
+				return $output;
+				
+			}catch(MyException $e)
+            {
+				$this->db->trans_rollback();
+                throw $e;
+            }
+		}
+		
 		public function getRowByCode($code)
 		{
 			if($code =="")
@@ -278,7 +353,7 @@
 			}
 			$sql ="	SELECT 
 							SUM(amount) AS total 
-						FROM sale_detailed WHERE code =?";
+						FROM sale_detailed WHERE code =? AND is_del ='false'";
 			$bind=array($code);
 			$query = $this->db->query($sql,$bind);
 			$error = $this->db->error();
@@ -530,11 +605,6 @@
 					$MyException->setParams($array);
 					throw $MyException;
 				}
-				
-				
-				
-				
-				
 				
 				$sql ="	UPDATE 
 							sale 

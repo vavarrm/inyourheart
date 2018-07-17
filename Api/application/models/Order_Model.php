@@ -531,20 +531,9 @@
 					throw $MyException;
 				}
 				
-				$affected_rows += $this->db->affected_rows();
 				
-				if($affected_rows ==0)
-				{
-					$status ='006';
-					$MyException = new MyException();
-					$array = array(
-						'el_system_error' 	=>$error['message'] ,
-						'status'	=>$status
-					);
-					
-					$MyException->setParams($array);
-					throw $MyException;
-				}
+				
+				
 				
 				
 				$sql ="	UPDATE 
@@ -572,12 +561,14 @@
 					throw $MyException;
 				}
 				
-				$affected_rows += $this->db->affected_rows();
 				
-				
-				if($affected_rows ==0)
+				$sql ="INSERT INTO account (code,type,usd,operator)";
+				$sql .="SELECT code,'sale',total,'+' FROM sale WHERE code =?";
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
 				{
-					$status ='006';
+					$status ='000';
 					$MyException = new MyException();
 					$array = array(
 						'el_system_error' 	=>$error['message'] ,
@@ -587,12 +578,15 @@
 					$MyException->setParams($array);
 					throw $MyException;
 				}
+				$affected_rows = $this->db->affected_rows();
+				
 				
 				$status ='200';
 				$output['status']=$status;
 				$this->db->trans_commit();
 				$output['affected_rows'] =$affected_rows ;
 				$output['code'] = $ary['code'];
+				
 				return $output;
 				
 			}

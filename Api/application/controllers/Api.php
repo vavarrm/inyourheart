@@ -103,7 +103,7 @@ class Api extends CI_Controller {
 			)
 			{
 				$array = array(
-					'status'	=>'002'
+					'status'	=>'001'
 				);
 				$MyException = new MyException();
 				$MyException->setParams($array);
@@ -133,7 +133,7 @@ class Api extends CI_Controller {
 	{
 		$output['body']=array();
 		$output['status'] = '200';
-		$output['title'] ='add more';
+		$output['title'] ='add Order';
 		try 
 		{	
 			if(
@@ -143,7 +143,7 @@ class Api extends CI_Controller {
 			)
 			{
 				$array = array(
-					'status'	=>'002'
+					'status'	=>'001'
 				);
 				$MyException = new MyException();
 				$MyException->setParams($array);
@@ -181,7 +181,7 @@ class Api extends CI_Controller {
 			)
 			{
 				$array = array(
-					'status'	=>'002'
+					'status'	=>'001'
 				);
 				$MyException = new MyException();
 				$MyException->setParams($array);

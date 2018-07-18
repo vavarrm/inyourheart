@@ -493,6 +493,35 @@
             }
 		}
 		
+		
+		public function getUsingNumber()
+		{
+			 try
+            {
+                $sql ="SELECT group_concat(number) AS using_number FROM sale WHERE status = 'making' GRUOP BY number";
+				$query = $this->db->query($sql);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$status='000';
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$row = $query->row_array();
+				$query->free_result();
+				return $row;
+            }catch(MyException $e)
+            {
+                throw $e;
+            }
+		}
+		
 		public function checkBill($ary)
 		{
 			try

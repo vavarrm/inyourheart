@@ -67,6 +67,8 @@ class Api extends CI_Controller {
 		try 
 		{
 			$data = $this->menu->getMenuIndexByCategory();
+			// $usingNumber = $this->order->getUsingNumber();
+			// var_dump($usingNumber);
 			$output['body']['data']['menu'] = $data['menu'];
 			$output['body']['data']['category'] = $data['category'];
 			
@@ -83,6 +85,8 @@ class Api extends CI_Controller {
 		
 		$this->myfunc->response($output);
 	}
+	
+	
 	
 	public function delMeals()
 	{

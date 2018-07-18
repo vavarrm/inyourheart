@@ -69,7 +69,9 @@ class Api extends CI_Controller {
 			$data = $this->menu->getMenuIndexByCategory();
 			// $usingNumber = $this->order->getUsingNumber();
 			// var_dump($usingNumber);
+			$khrtousd= $this->config->item('khrtousd');
 			$output['body']['data']['menu'] = $data['menu'];
+			$output['body']['data']['khrtousd'] = $khrtousd;
 			$output['body']['data']['category'] = $data['category'];
 			
 		}catch(MyException $e)

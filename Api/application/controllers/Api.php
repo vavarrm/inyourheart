@@ -58,21 +58,87 @@ class Api extends CI_Controller {
 
 	
 
+	public function getNoCheckBillList()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['title'] ='get Menu';
+		try 
+		{
+			$data = $this->order->getListByStatusAndDelivery('making');
+			$output['body']['data'] = $data ;
+			
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['status'] = $parames['status']; 
+			$output['message'] = $parames['message']; 
+			$this->myLog->error_log($parames);
+		}
+		
+		$this->myfunc->response($output);
+	}
+	
+	public function getBillByForCheckBill()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['title'] ='get Bill';
+		try 
+		{
+			if(
+				$this->request['code'] =="" 
+			)
+			{
+				$array = array(
+					'status'	=>'001'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			$data = $this->order->getBillForCheckBill($this->request['code']);
+			$output['body']['data'] = $data ;
+			
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['status'] = $parames['status']; 
+			$output['message'] = $parames['message']; 
+			$this->myLog->error_log($parames);
+		}
+		
+		$this->myfunc->response($output);
+	}
 	
 	public function getMenu()
 	{
 		$output['body']=array();
-		$output['status'] = '100';
+		$output['status'] = '200';
 		$output['title'] ='get Menu';
 		try 
 		{
+			for($i=1;$i<=20;$i++)
+			{
+
+				$noUseNumber[] = $i;
+			}
 			$data = $this->menu->getMenuIndexByCategory();
-			// $usingNumber = $this->order->getUsingNumber();
-			// var_dump($usingNumber);
+			$usingNumber = $this->order->getUsingNumber();
+			$usingNumberAry = explode(',',$usingNumber['using_number']);
+			$canUseNumber=array_diff($noUseNumber,$usingNumberAry);
 			$khrtousd= $this->config->item('khrtousd');
 			$output['body']['data']['menu'] = $data['menu'];
+			$output['body']['data']['canUseNumber'] = $canUseNumber;
 			$output['body']['data']['khrtousd'] = $khrtousd;
 			$output['body']['data']['category'] = $data['category'];
+			$output['body']['data']['usingNumber'] = $usingNumber;
 			
 		}catch(MyException $e)
 		{
@@ -152,7 +218,7 @@ class Api extends CI_Controller {
 			
 			
 			$data = $this->order->add($this->request);
-			$output['message']['body']['data'] = $data;
+			$output['body']['data'] = $data;
 			
 			
 		}catch(MyException $e)

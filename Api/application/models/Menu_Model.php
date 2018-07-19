@@ -73,10 +73,10 @@
 					$config['file_name']  = md5('menuimg'.$insert_id);
 					$config['upload_path'] = BASEPATH.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'menu'.DIRECTORY_SEPARATOR;
 
-					$config['allowed_types'] = 'jpg';
+					$config['allowed_types'] = 'png';
 					$config['max_size']	= '1024';
 					$config['max_width']  = '250';
-					$config['max_height']  = '167';
+					$config['max_height']  = '220';
 					if (!file_exists($config['upload_path'])) 
 					{
 						mkdir($config['upload_path'], 0777, true);
@@ -153,13 +153,13 @@
 				{
 					
 					$insert_id = $ary['id'];
-					$config['file_name']  = md5('menuimg'.$insert_id);
+					$config['file_name']  = md5('menuimg'.$ary['id']);
 					$config['upload_path'] = BASEPATH.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'menu'.DIRECTORY_SEPARATOR;
 
-					$config['allowed_types'] = 'jpg';
+					$config['allowed_types'] = 'png';
 					$config['max_size']	= '1024';
 					$config['max_width']  = '250';
-					$config['max_height']  = '167';
+					$config['max_height']  = '220';
 					$config['overwrite']  = true;
 					if (!file_exists($config['upload_path'])) 
 					{

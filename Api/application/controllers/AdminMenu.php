@@ -173,7 +173,7 @@ class AdminMenu extends CI_Controller
         $output['status'] = '200';
         $output['title'] ='Edit Menu ';
         $output['message'] ='Edit Menu  OK';
-        $back =-2;
+        $back =-1;
         try
         {
            

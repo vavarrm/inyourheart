@@ -493,12 +493,102 @@
             }
 		}
 		
+		public function getBillForCheckBill($code)
+		{
+			try
+            {
+                $sql ="	SELECT 
+							*,
+							concat(me.kh_name,' ',me.en_name,' ',me.zh_name) AS full_name ,
+							md5(concat('menuimg',me.id)) AS img
+						FROM 
+							sale_detailed AS sd  LEFT JOIN menu AS me 
+							ON sd.me_id = me.id
+						WHERE sd.code = ? ";
+				$bind = array($code);
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$status='000';
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$rows = $query->result_array();
+				$query->free_result();
+				
+				$sql ="SELECT SUM(unit_price*quantity) AS total FROM sale_detailed WHERE code = ? ";
+				$bind = array($code);
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$status='000';
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$row = $query->row_array();
+				$query->free_result();
+				
+				$output['list'] = $rows;
+				$output['info'] = $row;
+				
+				return $output;
+            }catch(MyException $e)
+            {
+                throw $e;
+            }
+		}
+		
+		public function getListByStatusAndDelivery($status='making',$delivery="no")
+		{
+			try
+            {
+                $sql ="SELECT * FROM sale WHERE status = ? AND delivery=?";
+				$bind = array(
+					$status,
+					$delivery
+				);
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$status='000';
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$rows = $query->result_array();
+				$query->free_result();
+				return $rows;
+            }catch(MyException $e)
+            {
+                throw $e;
+            }
+		}
 		
 		public function getUsingNumber()
 		{
-			 try
+			try
             {
-                $sql ="SELECT group_concat(number) AS using_number FROM sale WHERE status = 'making' GRUOP BY number";
+                $sql ="SELECT group_concat(number) AS using_number FROM sale WHERE status = 'making'";
 				$query = $this->db->query($sql);
 				$error = $this->db->error();
 				if($error['message'] !="")

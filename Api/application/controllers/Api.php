@@ -207,6 +207,7 @@ class Api extends CI_Controller {
 		$output['body']=array();
 		$output['status'] = '200';
 		$output['title'] ='del Meals';
+		$output['message'] ='del ok';
 		try 
 		{	
 			if(
@@ -224,7 +225,7 @@ class Api extends CI_Controller {
 			
 			
 			$data = $this->order->delMeals($this->request);
-			$output['message']['body']['data'] = $data;
+			$output['body']['data'] = $data;
 			
 			
 		}catch(MyException $e)
@@ -246,6 +247,7 @@ class Api extends CI_Controller {
 		$output['body']=array();
 		$output['status'] = '200';
 		$output['title'] ='add Order';
+		$output['message'] ='add Order';
 		try 
 		{	
 			if(
@@ -328,6 +330,7 @@ class Api extends CI_Controller {
 		$output['body']=array();
 		$output['status'] = '200';
 		$output['title'] ='add More By Order';
+		$output['message'] ='add More OK';
 		try 
 		{
 			if(
@@ -344,7 +347,7 @@ class Api extends CI_Controller {
 			}
 			
 			$data = $this->order->addMore($this->request);
-			$output['message']['body']['data'] = $data;
+			$output['body']['data'] = $data;
 			
 		}catch(MyException $e)
 		{

@@ -359,7 +359,9 @@
 			}
 			$sql = "SELECT 
 						sd.*,
-						concat(me.kh_name,' ',me.en_name,' ',me.zh_name) AS full_name 					
+						concat(me.kh_name,' ',me.en_name,' ',me.zh_name) AS full_name,
+						sa.number,
+						sa.delivery
 					FROM 
 						sale_detailed AS sd INNER JOIN sale AS sa  ON sd.code = sa.code
 						LEFT JOIN menu AS me ON sd.me_id = me.id
@@ -389,7 +391,9 @@
 			
 			$sql =sprintf("	SELECT 
 						SUM(t.quantity*t.unit_price) AS total_usd ,
-						FLOOR(SUM(t.quantity*t.unit_price)*%d) AS total_riel 
+						FLOOR(SUM(t.quantity*t.unit_price)*%d) AS total_riel ,
+						t.number,
+						t.delivery
 					FROM(%s) AS t",$this->khrtousd ,$this->db->last_query());
 			$bind = array($code);
 			$query = $this->db->query($sql ,$bind);
@@ -502,32 +506,67 @@
 						continue;
 					}
 					
-					$sql = "INSERT  sale_detailed
-									(code,me_id,unit_price,	original_price,quantity)
-							VALUES 	(?,?,?,?,?)
-							";
-					$bind = array(
-						$ary['code'],
-						$value['me_id'],
-						$value['unit_price'],
-						$value['original_price'],
-						$value['quantity'],
-					);
-					$query = $this->db->query($sql, $bind);
-					$error = $this->db->error();
-					if($error['message'] !="")
+					if($value['id'] !="")
 					{
-						$status ='000';
-						$MyException = new MyException();
-						$array = array(
-							'el_system_error' 	=>$error['message'] ,
-							'status'	=>$status
+						$sql = "UPDATE  sale_detailed
+								SET
+									unit_price = ?,
+									original_price =?,
+									quantity = ?
+								WHERE code = ?  AND id = ?";
+						$bind = array(
+							$value['unit_price'],
+							$value['original_price'],
+							$value['quantity'],
+							$ary['code'],
+							$value['id'],
 						);
+						$query = $this->db->query($sql, $bind);
+						$error = $this->db->error();
+						if($error['message'] !="")
+						{
+							$status ='000';
+							$MyException = new MyException();
+							$array = array(
+								'el_system_error' 	=>$error['message'] ,
+								'status'	=>$status
+							);
+							
+							$MyException->setParams($array);
+							throw $MyException;
+						}
+						$id = $value['id'];
 						
-						$MyException->setParams($array);
-						throw $MyException;
+					}else
+					{
+					
+						$sql = "INSERT  sale_detailed
+										(code,me_id,unit_price,	original_price,quantity)
+								VALUES 	(?,?,?,?,?)
+								";
+						$bind = array(
+							$ary['code'],
+							$value['me_id'],
+							$value['unit_price'],
+							$value['original_price'],
+							$value['quantity'],
+						);
+						$query = $this->db->query($sql, $bind);
+						$error = $this->db->error();
+						if($error['message'] !="")
+						{
+							$status ='000';
+							$MyException = new MyException();
+							$array = array(
+								'el_system_error' 	=>$error['message'] ,
+								'status'	=>$status
+							);
+							
+							$MyException->setParams($array);
+							throw $MyException;
+						}
+						$id = $this->db->insert_id();
 					}
-					$id = $this->db->insert_id();
 					$sql ="UPDATE sale_detailed SET amount = unit_price* quantity WHERE id =?";
 					$bind = array(
 						$id
@@ -548,7 +587,6 @@
 					}
 					
 					$affected_rows += $this->db->affected_rows();
-					
 				}
 				
 				if($affected_rows == 0)
@@ -655,7 +693,7 @@
 		{
 			try
             {
-                $sql ="SELECT * FROM sale WHERE status = ? AND delivery=?";
+                $sql ="SELECT * FROM sale WHERE status = ? AND delivery=? ORDER BY CODE DESC";
 				$bind = array(
 					$status,
 					$delivery

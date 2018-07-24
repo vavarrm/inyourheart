@@ -4,3 +4,5 @@
 /.idea
 /Api/*.htaccess
 /images/menu
+/css/*.htaccess
+/js/*.htaccess

@@ -56,7 +56,50 @@ class Api extends CI_Controller {
 		
     }
 
-	
+	public function getBillForCode()
+	{
+		$output['body']=array();
+		$output['status'] = '200';
+		$output['title'] ='get Bill';
+		try 
+		{
+			if(
+				$this->request['code'] =="" 
+			)
+			{
+				$array = array(
+					'status'	=>'001'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			
+			$data = $this->order->getSaleDetailedByCode($this->request['code'],'making');
+			if(empty($data))
+			{
+				$array = array(
+					'status'	=>'008'
+				);
+				$MyException = new MyException();
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			$output['body']['data'] = $data ;
+			
+		}catch(MyException $e)
+		{
+			$parames = $e->getParams();
+			$parames['class'] = __CLASS__;
+			$parames['function'] = __function__;
+			$parames['message'] =  $this->response_code[$parames['status']]; 
+			$output['status'] = $parames['status']; 
+			$output['message'] = $parames['message']; 
+			$this->myLog->error_log($parames);
+		}
+		
+		$this->myfunc->response($output);
+	}
 
 	public function getNoCheckBillList()
 	{
@@ -65,6 +108,7 @@ class Api extends CI_Controller {
 		$output['title'] ='get Menu';
 		try 
 		{
+		
 			$data = $this->order->getListByStatusAndDelivery('making');
 			$output['body']['data'] = $data ;
 			
@@ -100,7 +144,9 @@ class Api extends CI_Controller {
 				$MyException->setParams($array);
 				throw $MyException;
 			}
+			$khrtousd = $this->config->item('khrtousd');
 			$data = $this->order->getBillForCheckBill($this->request['code']);
+			$data['usdtoriel'] = $khrtousd;
 			$output['body']['data'] = $data ;
 			
 		}catch(MyException $e)
@@ -240,10 +286,14 @@ class Api extends CI_Controller {
 		$output['body']=array();
 		$output['status'] = '200';
 		$output['title'] ='checkBill';
+		$output['message'] ='checkBill OK';
 		try 
 		{	
 			if(
-				$this->request['code'] =="" 
+				$this->request['code'] =="" ||
+				($this->request['pay_amount_usd'] ==0 && $this->request['pay_amount_riel'] == 0) ||
+				($this->request['pay_amount_usd'] >0 && $this->request['pay_amount_riel'] > 0) ||
+				($this->request['discount'] <0.8 || $this->request['discount'] >1)
 			)
 			{
 				$array = array(
@@ -256,7 +306,7 @@ class Api extends CI_Controller {
 			
 			
 			$data = $this->order->checkBill($this->request);
-			$output['message']['body']['data'] = $data;
+			$output['body']['data'] = $data;
 			
 			
 		}catch(MyException $e)

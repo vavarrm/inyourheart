@@ -7,11 +7,9 @@
 		{
 			
 			parent::__construct();
-			$this->ci =& get_instance();
 			$this->load->database();
 			$query = $this->db->query("set time_zone = '+7:00'");
 			$error = $this->db->error();
-			$this->khrtousd = $this->ci->config->item('khrtousd');
 			if($error['message'] !="")
 			{
 				$MyException = new MyException();
@@ -23,6 +21,8 @@
 				$MyException->setParams($array);
 				throw $MyException;
 			}
+			$this->ci =& get_instance();
+			$this->khrtousd = $this->ci->config->item('khrtousd');
 		}
 		
 		
@@ -268,12 +268,13 @@
 						{
 							continue;
 						}
-						$sql = "UPDATE sale_detailed SET is_del = 'true' WHERE code=? AND  id=?";
+						$sql = "DELETE FROM sale_detailed WHERE code=? AND  id=?";
 						$bind = array(
 							$ary['code'],
 							$value['id'],
 						);
 						$query = $this->db->query($sql, $bind);
+						// echo $this->db->last_query();
 						$error = $this->db->error();
 						if($error['message'] !="")
 						{
@@ -305,7 +306,7 @@
             }
 		}
 		
-		public function getRowByCode($code)
+		public function getRowByCode($code,$status="")
 		{
 			if($code =="")
 			{
@@ -319,6 +320,11 @@
 			}
 			$sql = "SELECT * FROM sale WHERE code =?";
 			$bind=array($code);
+			if($status!="")
+			{
+				$sql .=" AND status = ?";
+				$bind[] = $status;
+			}
 			$query = $this->db->query($sql,$bind);
 			$error = $this->db->error();
 			if($error['message'] !="")
@@ -339,6 +345,75 @@
 			
 		}
 		
+		public function getSaleDetailedByCode($code,$status="")
+		{
+			if($code =="")
+			{
+				$MyException = new MyException();
+				$array = array(
+					'el_system_error' 	=>'no setParams' ,
+					'status'	=>$status
+				);
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			$sql = "SELECT 
+						sd.*,
+						concat(me.kh_name,' ',me.en_name,' ',me.zh_name) AS full_name 					
+					FROM 
+						sale_detailed AS sd INNER JOIN sale AS sa  ON sd.code = sa.code
+						LEFT JOIN menu AS me ON sd.me_id = me.id
+					WHERE sd.code =? ";
+			$bind=array($code);
+			if($status!="")
+			{
+				$sql .=" AND sa.status = ?";
+				$bind[] = $status;
+			}
+			$query = $this->db->query($sql,$bind);
+			$error = $this->db->error();
+			if($error['message'] !="")
+			{
+				$status ='000';
+				$MyException = new MyException();
+				$array = array(
+					'el_system_error' 	=>$error['message'] ,
+					'status'	=>$status
+				);
+				
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			$rows = $query->result_array();
+			$query->free_result();
+			
+			$sql =sprintf("	SELECT 
+						SUM(t.quantity*t.unit_price) AS total_usd ,
+						FLOOR(SUM(t.quantity*t.unit_price)*%d) AS total_riel 
+					FROM(%s) AS t",$this->khrtousd ,$this->db->last_query());
+			$bind = array($code);
+			$query = $this->db->query($sql ,$bind);
+			$error = $this->db->error();
+			if($error['message'] !="")
+			{
+				$status ='000';
+				$MyException = new MyException();
+				$array = array(
+					'el_system_error' 	=>$error['message'] ,
+					'status'	=>$status
+				);
+				
+				$MyException->setParams($array);
+				throw $MyException;
+			}
+			$row = $query->row_array();
+			$query->free_result();
+			$output['list'] = $rows;
+			$output['info'] = $row;
+			return $output;
+			
+		}
+		
 		public function getTotalByCode($code)
 		{
 			if($code =="")
@@ -352,8 +427,10 @@
 				throw $MyException;
 			}
 			$sql ="	SELECT 
-							SUM(amount) AS total 
-						FROM sale_detailed WHERE code =? AND is_del ='false'";
+							SUM(amount) AS total ,
+							SUM(amount)/%d AS total_riel 
+						FROM sale_detailed WHERE code =?";
+			$sql = sprintf($sql,$this->khrtousd);
 			$bind=array($code);
 			$query = $this->db->query($sql,$bind);
 			$error = $this->db->error();
@@ -500,7 +577,8 @@
                 $sql ="	SELECT 
 							*,
 							concat(me.kh_name,' ',me.en_name,' ',me.zh_name) AS full_name ,
-							md5(concat('menuimg',me.id)) AS img
+							md5(concat('menuimg',me.id)) AS img,
+							(sd.quantity*sd.unit_price) AS subtotal
 						FROM 
 							sale_detailed AS sd  LEFT JOIN menu AS me 
 							ON sd.me_id = me.id
@@ -523,7 +601,8 @@
 				$rows = $query->result_array();
 				$query->free_result();
 				
-				$sql ="SELECT SUM(unit_price*quantity) AS total FROM sale_detailed WHERE code = ? ";
+				$sql ="SELECT SUM(unit_price*quantity) AS total ,  FLOOR(SUM(unit_price*quantity)*%d)AS total_riel FROM sale_detailed WHERE code = ?  ";
+				$sql = sprintf($sql,$this->khrtousd);
 				$bind = array($code);
 				$query = $this->db->query($sql, $bind);
 				$error = $this->db->error();
@@ -542,8 +621,28 @@
 				$row = $query->row_array();
 				$query->free_result();
 				
+				
+				$sql = "SELECT * FROM sale WHERE code =?";
+				$bind = array($code);
+				$query = $this->db->query($sql, $bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$status='000';
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>$status
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				$data = $query->row_array();
+				$query->free_result();
+				
 				$output['list'] = $rows;
-				$output['info'] = $row;
+				$output['info'] = array_merge($data,$row);
 				
 				return $output;
             }catch(MyException $e)
@@ -616,7 +715,6 @@
 		{
 			try
             {
-			
 				$status='000';
 				$this->db->trans_begin();
 				if(empty($ary))
@@ -671,7 +769,19 @@
 				
 				$data = $this->getTotalByCode($ary['code']);
 				
-				if($ary['pay_amount'] < $data['total'])
+				if($ary['pay_amount_usd'] !=0 && $ary['pay_amount_usd']< $data['total']*ary['discount'])
+				{
+					$status='007';
+					$MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'' ,
+                        'status'	=>$status
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+				}
+				
+				if($ary['pay_amount_riel'] !=0 && $ary['pay_amount_riel']< $data['total_riel'])
 				{
 					$status='007';
 					$MyException = new MyException();
@@ -701,12 +811,14 @@
 						SET 
 							original_total	 =? , 
 							discount=? , 
-							pay_amount =?
+							pay_amount_usd =?,
+							pay_amount_riel =?
 						WHERE code=?";
 				$bind =array(
 					$data['total'],
 					$ary['discount'],
-					$ary['pay_amount'],
+					$ary['pay_amount_usd'],
+					$ary['pay_amount_riel'],
 					$ary['code'],
 				);
 				
@@ -728,17 +840,20 @@
 				$sql ="	UPDATE 
 							sale 
 						SET 
-							total	 =discount *original_total , 
-							pay_change	 =pay_amount-(discount *original_total) , 
-							status='checkout' 
+							total	 	=(discount *original_total)  , 
+							pay_change	= ? ,
+							status=	'checkout' ,
+							checkbill_datetime = NOW()
 						WHERE code=?";
 				$bind =array(
-					$ary['code'],
+					$ary['pay_change'],
+					$ary['code']
 				);
 				$query = $this->db->query($sql, $bind);
 				$error = $this->db->error();
 				if($error['message'] !="")
 				{
+					
 					$status ='000';
 					$MyException = new MyException();
 					$array = array(
@@ -753,10 +868,14 @@
 				
 				$sql ="INSERT INTO account (code,type,usd,operator)";
 				$sql .="SELECT code,'sale',total,'+' FROM sale WHERE code =?";
+				$bind =array(
+					$ary['code']
+				);
 				$query = $this->db->query($sql, $bind);
 				$error = $this->db->error();
 				if($error['message'] !="")
 				{
+					
 					$status ='000';
 					$MyException = new MyException();
 					$array = array(

@@ -7,7 +7,7 @@
 	$lang['005'] = "bill get total error";
 	$lang['006'] = "checkbill failure";
 	$lang['007'] = "pay amount Less Total";
-	$lang['008'] = "驗證碼錯誤";
+	$lang['008'] = "data is empty";
 	$lang['009'] = "注册失败";
 	$lang['010'] = "密码为8~12为英文与数字组合";
 	$lang['011'] = "QR碼失效";

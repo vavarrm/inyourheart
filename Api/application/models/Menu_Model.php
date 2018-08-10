@@ -72,7 +72,7 @@
 					$config['file_name']  = md5('menuimg'.$insert_id);
 					$config['upload_path'] = BASEPATH.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'menu'.DIRECTORY_SEPARATOR;
 
-					$config['allowed_types'] = 'jpg';
+					$config['allowed_types'] = 'jpg|png';
 					$config['max_size']	= '1024';
 					$config['max_width']  = '250';
 					$config['max_height']  = '167';
@@ -87,7 +87,7 @@
 					if ( ! $this->upload->do_upload('img'))
 					{
 						
-						$status = '000';
+						$status = '010';
 						$MyException = new MyException();
 						$array = array(
 							'el_system_error' 	=>$this->upload->display_errors() ,
@@ -155,7 +155,7 @@
 					$config['file_name']  = md5('menuimg'.$insert_id);
 					$config['upload_path'] = BASEPATH.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'menu'.DIRECTORY_SEPARATOR;
 
-					$config['allowed_types'] = 'jpg';
+					$config['allowed_types'] = 'jpg|png';
 					$config['max_size']	= '1024';
 					$config['max_width']  = '250';
 					$config['max_height']  = '167';
@@ -170,7 +170,7 @@
 					if ( ! $this->upload->do_upload('img'))
 					{
 						
-						$status = '009';
+						$status = '010';
 						$MyException = new MyException();
 						$array = array(
 							'el_system_error' 	=>$this->upload->display_errors() ,

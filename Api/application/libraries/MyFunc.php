@@ -238,7 +238,7 @@ class MyFunc
 			$row = $this->CI->admin_user->getAdminPermissions($ary);
 			if(count($row) ==0)
 			{
-				return '007';
+				return '008';
 			}
 		}
 		return '200';

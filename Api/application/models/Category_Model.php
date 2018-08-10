@@ -278,7 +278,37 @@
             }
 		}
 		
-		
+		public function getOptionListBysearch()
+		{
+			try
+            {
+				$sql = "SELECT id AS value,concat(kh_name,' ',en_name,' ',zh_name) AS text	 FROM  category ";
+				$bind = array(
+					$id
+				);
+				$query = $this->db->query($sql,$bind);
+				$error = $this->db->error();
+				if($error['message'] !="")
+				{
+					$MyException = new MyException();
+					$array = array(
+						'el_system_error' 	=>$error['message'] ,
+						'status'	=>'000'
+					);
+					
+					$MyException->setParams($array);
+					throw $MyException;
+				}
+				
+				$rows = $query->result_array();
+			
+				$query->free_result();
+				return $rows;
+            }catch(MyException $e)
+            {
+                throw $e;
+            }
+		}
 		
 		
 	}

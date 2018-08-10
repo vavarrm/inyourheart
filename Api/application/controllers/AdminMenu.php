@@ -285,14 +285,7 @@ class AdminMenu extends CI_Controller
             }
 
 			$form['selectSearchControl'] = array(
-				// 'status'	=>array(
-					// array('value' =>'processing' ,'text'=>'processing'),
-					// array('value' =>'tuktukgo' ,'text'=>'tuktukgo'),
-					// array('value' =>'complete' ,'text'=>'complete'),
-					// array('value' =>'cancel' ,'text'=>'cancel'),
-					// array('value' =>'tuktukarrival' ,'text'=>'tuktukarrival'),
-					// array('value' =>'tuktukback' ,'text'=>'tuktukback'),
-				// )
+				'category'	=>$this->category->getOptionListBysearch()
 			);
             if(!empty($form['selectSearchControl']))
             {
@@ -330,7 +323,12 @@ class AdminMenu extends CI_Controller
 			
 			
 		
-			
+			$ary['ca.id'] = array(
+				'value'=>$category,
+				'operator'	=>'=',
+				'logic'		=>'AND',
+			);
+
             $list = $this->menu->getList($ary);
 			
             $output['body'] = $list;

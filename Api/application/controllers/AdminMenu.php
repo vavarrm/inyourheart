@@ -163,7 +163,7 @@ class AdminMenu extends CI_Controller
 			$back =-1;
 			
         }
-        // $this->myfunc->back($back,$output['message']);
+        $this->myfunc->back($back,$output['message']);
 
     }
 	
@@ -284,15 +284,9 @@ class AdminMenu extends CI_Controller
                 }
             }
 
+			$list = $this->category->getOptionListBySearch();
 			$form['selectSearchControl'] = array(
-				// 'status'	=>array(
-					// array('value' =>'processing' ,'text'=>'processing'),
-					// array('value' =>'tuktukgo' ,'text'=>'tuktukgo'),
-					// array('value' =>'complete' ,'text'=>'complete'),
-					// array('value' =>'cancel' ,'text'=>'cancel'),
-					// array('value' =>'tuktukarrival' ,'text'=>'tuktukarrival'),
-					// array('value' =>'tuktukback' ,'text'=>'tuktukback'),
-				// )
+				'Category'	=>$list
 			);
             if(!empty($form['selectSearchControl']))
             {
@@ -301,6 +295,7 @@ class AdminMenu extends CI_Controller
                     $$key= (isset($this->request[$key]))?$this->request[$key]:'';
                 }
             }
+			
             $ary['order'] = (empty($this->request['order']))?array("t.id"=>'DESC'):$this->request['order'];
 
             // $form['datetimeSearchControl'] = true;
@@ -328,8 +323,10 @@ class AdminMenu extends CI_Controller
 				'unit_price'				 	  		=>array('field'=>"concat('USD ：  ', t.unit_price) AS unit_price",'AS' =>'unit_price'),
             );
 			
-			
-		
+			$ary['ca.id'] = array(
+                'value'	=>$Category,
+                'operator'	=>'=',
+            );
 			
             $list = $this->menu->getList($ary);
 			

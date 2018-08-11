@@ -23,6 +23,7 @@
 			}
 		}
 		
+		
 		public function add($ary)
 		{
 			try
@@ -72,10 +73,10 @@
 					$config['file_name']  = md5('menuimg'.$insert_id);
 					$config['upload_path'] = BASEPATH.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'menu'.DIRECTORY_SEPARATOR;
 
-					$config['allowed_types'] = 'jpg|png';
+					$config['allowed_types'] = 'png';
 					$config['max_size']	= '1024';
 					$config['max_width']  = '250';
-					$config['max_height']  = '167';
+					$config['max_height']  = '220';
 					if (!file_exists($config['upload_path'])) 
 					{
 						mkdir($config['upload_path'], 0777, true);
@@ -87,7 +88,7 @@
 					if ( ! $this->upload->do_upload('img'))
 					{
 						
-						$status = '010';
+						$status = '000';
 						$MyException = new MyException();
 						$array = array(
 							'el_system_error' 	=>$this->upload->display_errors() ,
@@ -152,13 +153,14 @@
 				{
 					
 					$insert_id = $ary['id'];
-					$config['file_name']  = md5('menuimg'.$insert_id);
+					$config['file_name']  = md5('menuimg'.$ary['id']);
 					$config['upload_path'] = BASEPATH.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR.'menu'.DIRECTORY_SEPARATOR;
 
-					$config['allowed_types'] = 'jpg|png';
+					$config['allowed_types'] = 'png';
 					$config['max_size']	= '1024';
 					$config['max_width']  = '250';
-					$config['max_height']  = '167';
+					$config['max_height']  = '220';
+					$config['overwrite']  = true;
 					if (!file_exists($config['upload_path'])) 
 					{
 						mkdir($config['upload_path'], 0777, true);
@@ -170,7 +172,7 @@
 					if ( ! $this->upload->do_upload('img'))
 					{
 						
-						$status = '010';
+						$status = '009';
 						$MyException = new MyException();
 						$array = array(
 							'el_system_error' 	=>$this->upload->display_errors() ,
@@ -289,7 +291,7 @@
 
 		public function getMenuIndexByCategory()
 		{
-			$status='100';
+			$status='000';
 			$sql = "SELECT id,  concat(kh_name,' ',en_name,' ',zh_name) AS full_name FROM category ORDER BY id";
 			$query = $this->db->query($sql);
 			$error = $this->db->error();

@@ -97,7 +97,6 @@ class AdminPurchase extends CI_Controller
         try
         {
 			$output['message'] = 'Add ok';
-			// var_dump($this->post);
             $row = $this->purchase->add($this->post,$this->admin);
 			if( $row ['affected_rows'] == 0)
 			{

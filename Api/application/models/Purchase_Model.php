@@ -189,17 +189,17 @@
                     throw $MyException;
                 }
 				
-				if($ary['pay_amount_usd'] <=0 && $ary['pay_amount_khr'] <=0)
-				{
-					$status ="008";
-					$MyException = new MyException();
-                    $array = array(
-                        'el_system_error' 	=>'Please Keyin Pay Amount' ,
-                        'status'	=>$status
-                    );
-                    $MyException->setParams($array);
-                    throw $MyException;
-				}
+				// if($ary['pay_amount_usd'] <=0 && $ary['pay_amount_khr'] <=0)
+				// {
+					// $status ="008";
+					// $MyException = new MyException();
+                    // $array = array(
+                        // 'el_system_error' 	=>'Please Keyin Pay Amount' ,
+                        // 'status'	=>$status
+                    // );
+                    // $MyException->setParams($array);
+                    // throw $MyException;
+				// }
 				
 				$sql = "SELECT  
 							CONCAT('P',DATE_FORMAT(NOW(),'%Y%m%d') , LPAD(RIGHT(`code`,6)  + 1 ,6,0) ) AS code 

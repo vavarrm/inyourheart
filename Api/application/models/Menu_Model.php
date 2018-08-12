@@ -39,8 +39,8 @@
                     throw $MyException;
                 }
 				
-				$sql = "INSERT INTO  menu (zh_name, en_name, kh_name,unit_price,ca_id)
-						VALUES (?,?,?,?,?)";
+				$sql = "INSERT INTO  menu (zh_name, en_name, kh_name,unit_price,ca_id,code)
+						VALUES (?,?,?,?,?,?)";
 				
 				$bind = array(
 					$ary['zh_name'],
@@ -48,6 +48,7 @@
 					$ary['kh_name'],
 					$ary['unit_price'],
 					$ary['category'],
+					$ary['code'],
 				);
 				
 				$query = $this->db->query($sql, $bind);
@@ -122,7 +123,7 @@
                     throw $MyException;
                 }
 				
-				$sql = "UPDATE   menu  SET zh_name =?, en_name=?,kh_name=?,unit_price=?,ca_id=? WHERE id = ?";
+				$sql = "UPDATE   menu  SET zh_name =?, en_name=?,kh_name=?,unit_price=?,ca_id=?,code=? WHERE id = ?";
 				
 				$bind = array(
 					$ary['zh_name'],
@@ -130,6 +131,7 @@
 					$ary['kh_name'],
 					$ary['unit_price'],
 					$ary['category'],
+					$ary['code'],
 					$ary['id'],
 				);
 				

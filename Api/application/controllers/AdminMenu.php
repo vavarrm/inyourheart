@@ -316,6 +316,7 @@ class AdminMenu extends CI_Controller
 			
             $ary['fields'] = array(
                 'id'				 	  		=>array('field'=>'t.id AS id','AS' =>'id','hide'	=>true),
+                'code'				 	  		=>array('field'=>'t.code AS code','AS' =>'code'),
                 'category'						=>array('field'=>"concat(ca.kh_name,' ',ca.en_name,' ',ca.zh_name) AS category",'AS' =>'category'),
                 'full_name'						=>array('field'=>"concat(t.kh_name,' ',t.en_name,' ',t.zh_name) AS full_name",'AS' =>'full_name'),
 				'unit_price'				 	  		=>array('field'=>"concat('USD ：  ', t.unit_price) AS unit_price",'AS' =>'unit_price'),

@@ -50,6 +50,138 @@ class AdminPurchase extends CI_Controller
         }
     }
 	
+	public function dayReport()
+	{
+		$output['body']=array();
+        $output['status'] = '200';
+        $output['title'] ='Purchase List';
+        try
+        {
+            $ary['limit'] = (isset($this->request['limit']))?$this->request['limit']:10;
+            $ary['p'] = (isset($this->request['p']))?$this->request['p']:1;
+            $form['inputSearchControl'] = array(
+
+            );
+            if(!empty($form['inputSearchControl']))
+            {
+                foreach($form['inputSearchControl'] as $key => $value)
+                {
+                    $$key= (isset($this->request[$key]))?$this->request[$key]:'';
+                }
+            }
+
+			$form['selectSearchControl'] = array(
+				// 'status'	=>array(
+					// array('value' =>'processing' ,'text'=>'processing'),
+					// array('value' =>'tuktukgo' ,'text'=>'tuktukgo'),
+					// array('value' =>'complete' ,'text'=>'complete'),
+					// array('value' =>'cancel' ,'text'=>'cancel'),
+					// array('value' =>'tuktukarrival' ,'text'=>'tuktukarrival'),
+					// array('value' =>'tuktukback' ,'text'=>'tuktukback'),
+				// )
+			);
+            if(!empty($form['selectSearchControl']))
+            {
+                foreach($form['selectSearchControl'] as $key => $value)
+                {
+                    $$key= (isset($this->request[$key]))?$this->request[$key]:'';
+                }
+            }
+			
+            $ary['order'] = (empty($this->request['order']))?array("t.code"=>'DESC'):$this->request['order'];
+			$ary['groupby'] = array(
+				'DATE(at.add_datetime)'
+			);
+			
+            // $form['datetimeSearchControl'] = true;
+            $form['dateSearchControl'] = true;
+			$datetime_start = (isset($this->request['datetime_start']))?$this->request['datetime_start']:'';
+			$datetime_end = (isset($this->request['datetime_end']))?$this->request['datetime_end']:'';
+			// var_dump($this->request);
+			if($datetime_start !="")
+			{
+				$datetime_start = date('Y-m-d' ,strtotime($datetime_start));
+			}
+			
+			if($datetime_end !="")
+			{
+				$datetime_end = date('Y-m-d' ,strtotime($datetime_end));
+			}
+			
+			// if($datetime_start =="" && $datetime_end  =="")
+			// {
+				// $datetime_start = date('Y-m-d' ,time());
+				// $datetime_end = date('Y-m-d' ,time());
+			// }
+			
+			$ary['datetime_start'] = array(
+				'value'	=>$datetime_start,
+				'format'	=>'%Y-%m-%d',
+				'operator'	=>'>=',
+			);
+			$ary['datetime_end'] = array(
+				'value'	=>$datetime_end,
+				'format'	=>'%Y-%m-%d',
+				'operator'	=>'<=',
+			);
+
+			
+            $form['table_add'] = __CLASS__."/add/".__CLASS__.'Add/';
+            // $form['table_del'] = "del";
+            // $form['table_edit'] =  __CLASS__."/editQr/".__CLASS__.'editQr/';
+			
+			
+			
+            $temp=array(
+                'pe_id' =>$this->get['pe_id'],
+                'ad_id' =>$this->admin['ad_id'],
+            );
+            $action_list = $this->admin_user->getAdminListAction($temp);
+
+
+			
+            $ary['fields'] = array(
+                'id'				    	=>array('field'=>'t.code AS id','AS' =>'id','hide'=>true),
+				'date'				   		=>array('field'=>"DATE_FORMAT(t.add_datetime,'%Y-%m-%d' ) AS date",'AS' =>'date'),
+                'usd'				    	=>array('field'=>'SUM(at.usd) AS usd','AS' =>'usd'),
+                'khr'				    	=>array('field'=>'SUM(at.khr) AS khr','AS' =>'khr'),
+                'usd_amount'				=>array('field'=>sprintf("SUM(at.khr/%1\$d+at.usd) AS usd_amount",$this->config->item('khrtousd')),'AS' =>'usd_amount'),
+                'khr_amount'				=>array('field'=>sprintf("SUM(at.khr+(at.usd*%1\$d)) AS khr_amount",$this->config->item('khrtousd')),'AS' =>'khr_amount'),
+                // 'pay_amount'				=>array('field'=>"CONCAT('USD：',t.pay_amount_usd,',',' KHR：',t.pay_amount_khr) AS pay_amount",'AS' =>'pay_amount'),
+                // 'subtotal'				    =>array('field'=>sprintf(" CONCAT('USD：',ROUND((t.usd + (t.khr/%1\$d)),2),'  ,  KHR：', ROUND((t.khr + (t.usd*%1\$d)))) AS subtotal", $this->config->item('khrtousd')),'AS' =>'subtotal'),
+                // 'change'				    =>array('field'=>sprintf(" CONCAT('$',ROUND((t.pay_amount_usd + (t.pay_amount_khr/%1\$d)),2) - ROUND((t.usd + (t.khr/%1\$d)),2) ,'  ,  KHR  ', ROUND((t.pay_amount_khr + (t.pay_amount_usd*%1\$d))) - ROUND((t.khr + (t.usd*%1\$d))) ) AS `change`", $this->config->item('khrtousd')),'AS' =>'change'),     
+            );
+			
+			
+		
+			
+			// $ary['t.is_del'] = array(
+				// 'value' =>'false',
+				// 'logic' =>'AND',
+				// 'operator' =>'=',
+			// );
+			// echo "D";
+            $list = $this->purchase->getDayReportList($ary);
+			
+            $output['body'] = $list;
+            $output['body']['fields'] = $ary['fields'] ;
+            $output['body']['subtotal_fields'] = $ary['subtotal'] ;
+            $output['body']['form'] =$form;
+            $output['body']['action_list'] =$action_list;
+        }catch(MyException $e)
+        {
+            $parames = $e->getParams();
+            $parames['class'] = __CLASS__;
+            $parames['function'] = __function__;
+            $parames['message'] =  $this->response_code[$parames['status']];
+            $output['message'] = $parames['message'];
+            $output['status'] = $parames['status'];
+            $this->myLog->error_log($parames);
+        }
+
+        $this->myfunc->response($output);
+	}
+	
 	public function addFormPage()
 	{
 		$output['body']=array();

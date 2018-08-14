@@ -414,7 +414,44 @@
             }
         }
 		
-		
+		public function getDayReportList($ary)
+		{
+			try
+            {
+                if(empty($ary))
+                {
+                    $MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'no setParams' ,
+                        'status'	=>'000'
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+                }
+                if(!empty($ary['fields']))
+                {
+                    foreach($ary['fields'] as $value)
+                    {
+                        $temp[] = $value['field'];
+                    }
+                }
+                $fields = join(',' ,$temp);
+
+                $sql ="	SELECT 
+						
+					"
+                    . $fields.
+                    " FROM purchase AS t INNER JOIN  account AS at ON t.code = at.code ";
+                $ary['sql'] =$sql;
+
+                $output = $this->getListFromat($ary);
+
+                return 	$output  ;
+            }catch(MyException $e)
+            {
+                throw $e;
+            }
+		}
 		
 		
 	}

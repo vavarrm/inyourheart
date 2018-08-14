@@ -113,7 +113,8 @@ class CI_Model {
 				'order',
 				'sql',
 				'fields',
-				'subtotal'
+				'subtotal',
+				'groupby'
 			);
 			$limit = sprintf(" LIMIT %d, %d",abs($ary['p']-1)*$ary['limit'],$ary['limit']);
 			if(is_array($ary))
@@ -173,12 +174,21 @@ class CI_Model {
 				$order .=join(',',$order_ary);
 			}
 			
+			if(is_array($ary['groupby']))
+			{
+				$groupby =" GROUP BY ";
+				foreach($ary['groupby'] AS $key =>$value)
+				{
+					$groupby_ary[]=sprintf( '%s', $value);
+				}
+				$groupby .=join(',',$groupby_ary);
+			}
 			
 			
 			$sql =$ary['sql'];
-			$search_sql = $sql.$where.$order.$limit ;
+			$search_sql = $sql.$where.$groupby.$order.$limit ;
 			$query = $this->db->query($search_sql, $bind);
-			// echo $this->db->last_query();
+					// echo $this->db->last_query();
 			$error = $this->db->error();
 			if($error['message'] !="")
 			{
@@ -206,8 +216,9 @@ class CI_Model {
 				}
 				$temp =",".join(',', $temp);
 			}
-			$total_sql = sprintf("SELECT COUNT(*)  AS total  %s FROM(%s) AS t",$temp,$sql.$where) ;
+			$total_sql = sprintf("SELECT COUNT(*)  AS total  %s FROM(%s) AS t",$temp,$sql.$where.$groupby) ;
 			$query = $this->db->query($total_sql, $bind);
+	
 			$error = $this->db->error();
 			if($error['message'] !="")
 			{

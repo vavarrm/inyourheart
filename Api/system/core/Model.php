@@ -152,6 +152,19 @@ class CI_Model {
 					{
 						$where .=sprintf(" %s  %s IS NOT NULL ", $value['logic'], $key);	
 					}
+					elseif(is_array($value['value']))
+					{
+						$str_arr =array();
+						$where.=" AND (";
+						foreach($value['value'] as $r)
+						{
+							$str_arr[] = sprintf("%s = ?",$key);
+							$bind[] =$r;
+						}
+						$str = join(" || " ,$str_arr);
+						$where.=$str;
+						$where.=" )";
+					}
 					else
 					{
 						if($value['logic'] =="")
@@ -188,7 +201,7 @@ class CI_Model {
 			$sql =$ary['sql'];
 			$search_sql = $sql.$where.$groupby.$order.$limit ;
 			$query = $this->db->query($search_sql, $bind);
-					// echo $this->db->last_query();
+			// echo $this->db->last_query();
 			$error = $this->db->error();
 			if($error['message'] !="")
 			{

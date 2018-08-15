@@ -474,11 +474,16 @@ class AdminAccount extends CI_Controller
             );
 			
 			$ary['t.type'] = array(
-				'value'=>array('sale'),
+				'value'=>array('sale','purchase'),
 				'operator'	=>'=',
 				'logic'		=>'AND',
 			);
 			
+			$ary['t.is_del'] = array(
+				'value'=>'false',
+				'operator'	=>'=',
+				'logic'		=>'AND',
+			);
 		
 			$ary['groupby'] = array(
 				'DATE(t.add_datetime)',

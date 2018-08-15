@@ -689,14 +689,14 @@
             }
 		}
 		
-		public function getListByStatusAndDelivery($status='making',$delivery="no")
+		public function getListByStatusAndDelivery($status='making')
 		{
 			try
             {
-                $sql ="SELECT * FROM sale WHERE status = ? AND delivery=? ORDER BY CODE DESC";
+                $sql ="SELECT * FROM sale WHERE status = ?  AND code IN(SELECT code FROM sale_detailed) ORDER BY CODE DESC";
 				$bind = array(
 					$status,
-					$delivery
+					// $delivery
 				);
 				$query = $this->db->query($sql, $bind);
 				$error = $this->db->error();
@@ -971,7 +971,7 @@
 						
 					"
                     . $fields.
-                    " FROM purchase AS t ";
+                    " FROM sale AS t ";
                 $ary['sql'] =$sql;
 				// echo $sql;
                 $output = $this->getListFromat($ary);

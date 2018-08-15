@@ -314,7 +314,7 @@
 			{
 				foreach($rows as $row)
 				{
-					$sql = "SELECT id ,unit_price,  concat(kh_name,' ',en_name,' ',zh_name) AS full_name ,md5(concat('menuimg',id)) AS img FROM 	menu WHERE ca_id  = ? AND status ='sale_on'"; 
+					$sql = "SELECT id ,unit_price, code,  concat(kh_name,' ',en_name,' ',zh_name) AS full_name ,md5(concat('menuimg',id)) AS img FROM 	menu WHERE ca_id  = ? AND status ='sale_on'"; 
 					
 					$bind = array(
 						$row['id']

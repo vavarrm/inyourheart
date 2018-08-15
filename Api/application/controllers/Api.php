@@ -170,7 +170,7 @@ class Api extends CI_Controller {
 		$output['title'] ='get Menu';
 		try 
 		{
-			for($i=1;$i<=20;$i++)
+			for($i=1;$i<=99;$i++)
 			{
 
 				$noUseNumber[] = $i;

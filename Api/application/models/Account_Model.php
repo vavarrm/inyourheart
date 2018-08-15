@@ -160,6 +160,44 @@
             }
         }
 		
+		public function dateReport($ary)
+        {
+
+            try
+            {
+                if(empty($ary))
+                {
+                    $MyException = new MyException();
+                    $array = array(
+                        'el_system_error' 	=>'no setParams' ,
+                        'status'	=>'000'
+                    );
+                    $MyException->setParams($array);
+                    throw $MyException;
+                }
+                if(!empty($ary['fields']))
+                {
+                    foreach($ary['fields'] as $value)
+                    {
+                        $temp[] = $value['field'];
+                    }
+                }
+                $fields = join(',' ,$temp);
+
+                $sql ="	SELECT "
+                    . $fields.
+                    " FROM account AS t ";
+
+                $ary['sql'] =$sql;
+                $output = $this->getListFromat($ary);
+
+                return 	$output  ;
+            }catch(MyException $e)
+            {
+                throw $e;
+            }
+        }
+		
 		public function getcashFlow()
 		{
 			try
@@ -170,7 +208,7 @@
 							`type`,
 							SUM(`khr`) AS khr,
 							SUM(`usd`) AS usd,
-							ROUND(SUM(`khr`/%d+`usd`),2) AS  total_usd ,
+							ROUND(SUM(`khr`/%d+`usd`),3) AS  total_usd ,
 							ROUND(SUM(`khr`+`usd`*%d)) AS  total_khr,
 							operator
 						 FROM `account` 
@@ -198,7 +236,7 @@
 				$query->free_result();
 				
 				
-				$sql="	SELECT ROUND((t.khr/4000 + t.usd),2)  total_usd , ROUND((t.khr + t.usd*4000)) AS total_khr FROM (SELECT 
+				$sql="	SELECT ROUND((t.khr/4000 + t.usd),3)  total_usd , ROUND((t.khr + t.usd*4000)) AS total_khr FROM (SELECT 
 							SUM(CASE `operator` 
 								WHEN '+' THEN `khr`
 								WHEN '-' THEN `khr`*-1

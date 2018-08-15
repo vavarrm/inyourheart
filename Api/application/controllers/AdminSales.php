@@ -351,6 +351,17 @@ class AdminSales extends CI_Controller
 				'operator'	=>'=',
 				'logic'		=>'AND',
 			);
+			
+			$ary['datetime_start'] = array(
+				'value'	=>$datetime_start,
+				'operator'	=>'>=',
+				'format'	=>'%Y-%m-%d'
+			);
+			$ary['datetime_end'] = array(
+				'value'	=>$datetime_end,
+				'operator'	=>'<=',
+				'format'	=>'%Y-%m-%d'
+			);
 
 			$ary['subtotal'] =array(
 				'SUM(t.total)' =>array("field"=>'subtotal')
@@ -385,6 +396,8 @@ class AdminSales extends CI_Controller
 
         $this->myfunc->response($output);
     }
+	
+	
 	
 	public function getDetails()
 	{

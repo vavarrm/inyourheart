@@ -394,4 +394,138 @@ class AdminAccount extends CI_Controller
 		$this->myfunc->response($output);
 	}
 
+	
+	public function dateReport($ary=array())
+    {
+        $output['body']=array();
+        $output['status'] = '200';
+        $output['title'] ='Purchase List';
+        try
+        {
+            $ary['limit'] = (isset($this->request['limit']))?$this->request['limit']:10;
+            $ary['p'] = (isset($this->request['p']))?$this->request['p']:1;
+            $form['inputSearchControl'] = array(
+
+            );
+            if(!empty($form['inputSearchControl']))
+            {
+                foreach($form['inputSearchControl'] as $key => $value)
+                {
+                    $$key= (isset($this->request[$key]))?$this->request[$key]:'';
+                }
+            }
+
+			$form['selectSearchControl'] = array(
+				// 'status' =>array(
+					// array('value' =>'making' ,'text'=>'making' ,'selected'=>true),
+					// array('value' =>'checkout' ,'text'=>'checkout'),
+					// array('value' =>'badDebts' ,'text'=>'badDebts'),
+				// )
+			);
+			
+            if(!empty($form['selectSearchControl']))
+            {
+                foreach($form['selectSearchControl'] as $key => $value)
+                {
+                    $$key= (isset($this->request[$key]))?$this->request[$key]:'';
+                }
+            }
+            $ary['order'] = (empty($this->request['order']))?array("t.code"=>'DESC'):$this->request['order'];
+
+            // $form['datetimeSearchControl'] = true;
+            $form['dateSearchControl'] = true;
+			$datetime_start = (isset($this->request['datetime_start']))?$this->request['datetime_start']:date('Y-m-d' ,time());
+			$datetime_end = (isset($this->request['datetime_end']))?$this->request['datetime_end']:date('Y-m-d' ,time());
+			// var_dump($this->request);
+			if($datetime_start !="")
+			{
+				$datetime_start = date('Y-m-d' ,strtotime($datetime_start));
+			}
+			
+			if($datetime_end !="")
+			{
+				$datetime_end = date('Y-m-d' ,strtotime($datetime_end));
+			}
+			
+            // $form['table_add'] = __CLASS__."/add/".__CLASS__.'Add/';
+            // $form['table_del'] = "del";
+            // $form['table_edit'] =  __CLASS__."/edit/".__CLASS__.'editForm/';
+			
+			
+			
+            $temp=array(
+                'pe_id' =>$this->get['pe_id'],
+                'ad_id' =>$this->admin['ad_id'],
+            );
+            $action_list = $this->admin_user->getAdminListAction($temp);
+
+
+			
+            $ary['fields'] = array(
+                'id'				 	  		=>array('field'=>'t.code AS id','AS' =>'id','hide'	=>true),
+                'datetime'				 	  	=>array('field'=>'DATE_FORMAT(t.add_datetime,"%Y-%m-%d") AS datetime','AS' =>'datetime'),
+                'type'				 	  		=>array('field'=>'t.type AS type','AS' =>'type'),
+				'usd_amount'					=>array('field'=>sprintf("SUM(t.khr/%1\$d+t.usd) AS usd_amount",$this->config->item('khrtousd')),'AS' =>'usd_amount'),
+                'khr_amount'					=>array('field'=>sprintf("SUM(t.khr+(t.usd*%1\$d)) AS khr_amount",$this->config->item('khrtousd')),'AS' =>'khr_amount'),
+				// 'original_total'				=>array('field'=>'t.total AS original_total','AS' =>'original_total'),
+                // 'discount'				 	  	=>array('field'=>'t.total AS discount','AS' =>'discount'),
+				// 'total'				 	  		=>array('field'=>'t.total AS total','AS' =>'total'),
+				// 'total'				 	  		=>array('field'=>'t.total AS total','AS' =>'total'),
+            );
+			
+			$ary['t.type'] = array(
+				'value'=>array('sale'),
+				'operator'	=>'=',
+				'logic'		=>'AND',
+			);
+			
+		
+			$ary['groupby'] = array(
+				'DATE(t.add_datetime)',
+				't.type'
+			);
+			$ary['datetime_start'] = array(
+				'value'	=>$datetime_start,
+				'operator'	=>'>=',
+				'format'	=>'%Y-%m-%d'
+			);
+			$ary['datetime_end'] = array(
+				'value'	=>$datetime_end,
+				'operator'	=>'<=',
+				'format'	=>'%Y-%m-%d'
+			);
+	
+			
+			
+
+            $list = $this->account->dateReport($ary);
+			
+            $output['body'] = $list;
+            $output['body']['fields'] = $ary['fields'] ;
+			if(!empty($ary['fields']))
+			{
+				foreach($ary['fields'] as $value)
+				{
+					if($value['hide'] != true)
+					{
+						$colspan++;
+					}
+				}
+			}
+            // $output['body']['total_info'] =$list['pageinfo']['subtotal_datalist'];
+            $output['body']['form'] =$form;
+            $output['body']['action_list'] =$action_list;
+        }catch(MyException $e)
+        {
+            $parames = $e->getParams();
+            $parames['class'] = __CLASS__;
+            $parames['function'] = __function__;
+            $parames['message'] =  $this->response_code[$parames['status']];
+            $output['message'] = $parames['message'];
+            $output['status'] = $parames['status'];
+            $this->myLog->error_log($parames);
+        }
+
+        $this->myfunc->response($output);
+    }
 }

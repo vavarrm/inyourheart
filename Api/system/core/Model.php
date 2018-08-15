@@ -152,6 +152,16 @@ class CI_Model {
 					{
 						$where .=sprintf(" %s  %s IS NOT NULL ", $value['logic'], $key);	
 					}
+					elseif(is_array($value))
+					{
+						$where.="AND(";
+						foreach($value as $row)
+						{
+							
+							
+						}
+						$where.=")";
+					}
 					else
 					{
 						if($value['logic'] =="")

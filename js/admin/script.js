@@ -256,6 +256,7 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 		table_pageinfo :{},
 		table_row:{},
 		table_fields:{},
+		table_total_fields:{},
 		table_pageinfo:{},
 		table_form:{},
 		table_search:{},
@@ -774,6 +775,8 @@ var MainController = function($scope, $routeParams, apiService, $templateCache, 
 					$scope.data.table_pageinfo.start=(parseInt($scope.data.table_pageinfo.p)-1)*parseInt($scope.data.table_pageinfo.limit)+1;
 					$scope.data.table_pageinfo.end=(parseInt($scope.data.table_pageinfo.p)-1)*parseInt($scope.data.table_pageinfo.limit)+parseInt($scope.data.table_row.length);
 					$scope.data.table_fields = r.data.body.fields;
+					$scope.data.table_total_fields = r.data.body.total_fields;
+					$scope.data.table_total_info = r.data.body.total_info;
 					$scope.data.table_action_list = r.data.body.action_list;
 					$scope.data.table_button_list = r.data.body.button_list;
 					$scope.data.form.table_add = r.data.body.form.table_add;

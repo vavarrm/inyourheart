@@ -212,11 +212,12 @@ class CI_Model {
 				$temp =array();
 				foreach($ary['subtotal'] as $key => $value)
 				{
-					$temp[]= sprintf('%s AS %s',$value['field'],$key); 
+					$temp[]= sprintf('%s AS %s',$key,$value['field']); 
 				}
 				$temp =",".join(',', $temp);
 			}
 			$total_sql = sprintf("SELECT COUNT(*)  AS total  %s FROM(%s) AS t",$temp,$sql.$where.$groupby) ;
+			// echo $total_sql;
 			$query = $this->db->query($total_sql, $bind);
 	
 			$error = $this->db->error();

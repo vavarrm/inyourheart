@@ -10,9 +10,9 @@
 	<div class="x_content">
 		<div class="dataTables_wrapper form-inline dt-bootstrap no-footer" >
 			<div class="row tile_count" >
-				<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" ng-repeat="(key,row) in data.table_subtotal_fields ">
-					<span class="count_top"><i class="fa fa-dollar"></i>{{row.AS}}</span>
-					<div class="count" ng-bind="data.table_subtotal_data[key]">2500</div>
+				<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" ng-repeat="(key,value) in data.table_total_info ">
+					<span class="count_top"></i>{{key}}</span>
+					<div class="count" ng-bind="value"></div>
 				</div>
 				<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count" ng-repeat="row in socket_push_data">
 					<span class="count_top"><i class="fa fa-dollar" ng-bind="row.name"></i></span>
@@ -99,8 +99,8 @@
 								<font style="vertical-align: inherit;" ng-bind="key+':'"></font>
 							</font>
 							<select  ng-change="select_search(key,data.table_search[key])" ng-model="data.table_search[key]" ng-init="data.table_search[key]==''" ng-enter="searchClick();"  class="form-control" >
-								<option value="">please select</option>
-								<option ng-repeat="option in value" value="{{option.value}}" ng-bind="option.text"></option>
+								<option value="">select all</option>
+								<option ng-repeat="option in value"  ng-selected="option.selected=='true'" value="{{option.value}}" ng-bind="option.text"></option>
 							</select>&nbsp;&nbsp;&nbsp;
 						</label>
 						
@@ -134,6 +134,10 @@
 									<button ng-if="data.form.table_edit !==undefined" type="button" ng-click="edit(row.id)" class="btn btn-default btn-xs">edit</button>
 									<a ng-if="data.table_action_list.length >0" ng-repeat="action in data.table_action_list" ng-bind="action.pe_name" ng-click="actionClick(action,row.id)" class="btn btn-default btn-xs"> </a>
 								</td>
+							</tr>
+							<tr  style="background-color:#c3e6cb;color :#000" ng-if="data.table_subtotal_fields.colspan>0">
+								<td align="right" colspan="{{data.table_subtotal_fields.colspan-1}}">total</td>
+								<td></td>
 							</tr>
 						</tbody>
 					</table>
